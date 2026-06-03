@@ -17,10 +17,15 @@ def nearest_expiry(email=None,product_name=None):
     try:
         conn=sqlite3.connect('database.db')
         cursor=conn.cursor()
+        
         cursor.execute("SELECT * FROM inventory WHERE user_email=? AND product_name=? ORDER BY expiry_date ASC",(email,product_name))
         batch=cursor.fetchone()
-        conn.close()
-        return batch
+        if batch :
+            conn.close()
+            return batch
+        else:
+            conn.close()
+            return None
 
     except Exception as e:
         conn.close()
@@ -28,6 +33,8 @@ def nearest_expiry(email=None,product_name=None):
 
 def add_batch(email=None,product_name=None,batch_no=None,quantity=None,expiry_date=None):
     try:
+        product_name=product_name.upper()
+        product_name=product_name.strip()
         expiry_date=datetime.datetime.strptime(expiry_date, '%Y-%m-%d').date()
         conn=sqlite3.connect('database.db')
         cursor=conn.cursor()
@@ -41,6 +48,8 @@ def add_batch(email=None,product_name=None,batch_no=None,quantity=None,expiry_da
 
 def sell_product(email=None,product_name=None,quantity=None):
     try:
+        product_name=product_name.upper()
+        product_name=product_name.strip()
         conn=sqlite3.connect('database.db')
         cursor=conn.cursor()
         quantities=quantity
