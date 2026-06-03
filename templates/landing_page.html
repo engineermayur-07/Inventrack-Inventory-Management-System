@@ -1,1 +1,547 @@
-<h1><a href=" /login ">Login</a></h1>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>INVENTRACK – Inventory Management</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0a0f1e;
+      --surface: #f4f2ed;
+      --accent: #d4500a;
+      --accent2: #1a3a6e;
+      --muted: #7a7a72;
+      --card: #ffffff;
+      --border: #e0ddd6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(244, 242, 237, 0.92);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.4rem;
+      letter-spacing: 0.08em;
+      color: var(--ink);
+      text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+
+    .nav-links {
+      display: flex; gap: 2rem; list-style: none;
+    }
+    .nav-links a {
+      font-size: 0.9rem; font-weight: 500; color: var(--muted);
+      text-decoration: none; transition: color .2s;
+    }
+    .nav-links a:hover { color: var(--ink); }
+
+    .nav-cta {
+      display: flex; gap: 0.8rem; align-items: center;
+    }
+    .btn-outline {
+      padding: 0.5rem 1.2rem; border: 1.5px solid var(--ink);
+      border-radius: 4px; font-family: 'DM Sans', sans-serif;
+      font-size: 0.85rem; font-weight: 500; color: var(--ink);
+      text-decoration: none; transition: background .2s, color .2s;
+    }
+    .btn-outline:hover { background: var(--ink); color: var(--surface); }
+
+    .btn-primary {
+      padding: 0.5rem 1.4rem; background: var(--accent);
+      border: 1.5px solid var(--accent); border-radius: 4px;
+      font-family: 'DM Sans', sans-serif; font-size: 0.85rem;
+      font-weight: 500; color: #fff; text-decoration: none;
+      transition: background .2s, transform .15s;
+    }
+    .btn-primary:hover { background: #b8420a; transform: translateY(-1px); }
+
+    /* hamburger */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; }
+    .hamburger span { width: 24px; height: 2px; background: var(--ink); border-radius: 2px; transition: all .3s; }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      align-items: center;
+      padding: 7rem 2.5rem 4rem;
+      gap: 3rem;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .hero-text { animation: fadeUp .7s ease both; }
+    .badge {
+      display: inline-flex; align-items: center; gap: 0.5rem;
+      padding: 0.35rem 0.9rem; background: #fff;
+      border: 1px solid var(--border); border-radius: 100px;
+      font-size: 0.78rem; font-weight: 500; color: var(--accent);
+      margin-bottom: 1.5rem; letter-spacing: 0.04em;
+    }
+    .badge::before { content: '●'; font-size: 0.6rem; }
+
+    h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.4rem, 5vw, 4rem);
+      font-weight: 800;
+      line-height: 1.08;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.2rem;
+    }
+    h1 em { font-style: normal; color: var(--accent); }
+
+    .hero-sub {
+      font-size: 1.05rem; color: var(--muted); line-height: 1.7;
+      max-width: 480px; margin-bottom: 2.2rem;
+    }
+
+    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; }
+
+    .btn-lg {
+      padding: 0.85rem 2rem; font-size: 1rem; font-weight: 500;
+      border-radius: 6px; text-decoration: none; transition: all .2s;
+      font-family: 'DM Sans', sans-serif;
+    }
+    .btn-lg-primary {
+      background: var(--accent); color: #fff; border: 2px solid var(--accent);
+    }
+    .btn-lg-primary:hover { background: #b8420a; transform: translateY(-2px); box-shadow: 0 6px 20px rgba(212,80,10,.3); }
+    .btn-lg-outline {
+      background: transparent; color: var(--ink); border: 2px solid var(--ink);
+    }
+    .btn-lg-outline:hover { background: var(--ink); color: var(--surface); }
+
+    /* hero visual */
+    .hero-visual { animation: fadeUp .9s ease both; }
+    .dashboard-mock {
+      background: var(--card);
+      border-radius: 16px;
+      box-shadow: 0 30px 80px rgba(10,15,30,.12), 0 2px 8px rgba(10,15,30,.06);
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    .mock-header {
+      background: var(--ink); padding: 1rem 1.4rem;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .mock-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .mock-title {
+      font-family: 'Syne', sans-serif; font-weight: 700;
+      color: #fff; font-size: 0.85rem; letter-spacing: 0.06em;
+      margin-left: 0.5rem;
+    }
+    .mock-body { padding: 1.2rem; }
+    .mock-stats {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 0.7rem;
+      margin-bottom: 1rem;
+    }
+    .stat-card {
+      background: var(--surface); border-radius: 8px;
+      padding: 0.8rem; text-align: center;
+      border: 1px solid var(--border);
+    }
+    .stat-num {
+      font-family: 'Syne', sans-serif; font-size: 1.4rem;
+      font-weight: 800; color: var(--ink);
+    }
+    .stat-card:nth-child(2) .stat-num { color: var(--accent); }
+    .stat-lbl { font-size: 0.68rem; color: var(--muted); margin-top: 2px; }
+    .mock-table { width: 100%; border-collapse: collapse; }
+    .mock-table th {
+      font-size: 0.65rem; font-weight: 600; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      padding: 0.5rem 0.4rem; border-bottom: 1px solid var(--border); text-align: left;
+    }
+    .mock-table td {
+      font-size: 0.75rem; padding: 0.55rem 0.4rem;
+      border-bottom: 1px solid var(--border); color: var(--ink);
+    }
+    .mock-table tr:last-child td { border-bottom: none; }
+    .pill {
+      display: inline-block; padding: 0.2rem 0.55rem;
+      border-radius: 100px; font-size: 0.65rem; font-weight: 600;
+    }
+    .pill-warn { background: #fff3e0; color: #e65100; }
+    .pill-ok   { background: #e8f5e9; color: #2e7d32; }
+
+    /* ── STATS STRIP ── */
+    .stats-strip {
+      background: var(--ink); padding: 3rem 2.5rem;
+      display: grid; grid-template-columns: repeat(4, 1fr);
+      gap: 2rem; text-align: center;
+    }
+    .strip-num {
+      font-family: 'Syne', sans-serif; font-size: 2.4rem;
+      font-weight: 800; color: var(--accent);
+    }
+    .strip-lbl { font-size: 0.85rem; color: rgba(255,255,255,.55); margin-top: 0.3rem; }
+
+    /* ── FEATURES ── */
+    .features {
+      max-width: 1200px; margin: 0 auto;
+      padding: 6rem 2.5rem;
+    }
+    .section-label {
+      font-size: 0.75rem; font-weight: 600; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 1rem;
+    }
+    .section-title {
+      font-family: 'Syne', sans-serif; font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+      font-weight: 800; line-height: 1.15; margin-bottom: 3.5rem;
+    }
+
+    .feat-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 1.5rem;
+    }
+    .feat-card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 12px; padding: 2rem;
+      transition: transform .25s, box-shadow .25s;
+    }
+    .feat-card:hover { transform: translateY(-4px); box-shadow: 0 16px 40px rgba(10,15,30,.08); }
+    .feat-icon {
+      width: 44px; height: 44px; border-radius: 10px;
+      background: var(--surface); border: 1px solid var(--border);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.3rem; margin-bottom: 1.2rem;
+    }
+    .feat-card h3 {
+      font-family: 'Syne', sans-serif; font-size: 1.05rem;
+      font-weight: 700; margin-bottom: 0.6rem;
+    }
+    .feat-card p { font-size: 0.88rem; color: var(--muted); line-height: 1.65; }
+
+    /* ── HOW IT WORKS ── */
+    .how {
+      background: var(--ink); color: #fff;
+      padding: 6rem 2.5rem;
+    }
+    .how-inner { max-width: 1200px; margin: 0 auto; }
+    .how .section-label { color: var(--accent); }
+    .how .section-title { color: #fff; }
+    .steps {
+      display: grid; grid-template-columns: repeat(3, 1fr);
+      gap: 2rem; margin-top: 3rem;
+    }
+    .step { display: flex; gap: 1rem; }
+    .step-num {
+      font-family: 'Syne', sans-serif; font-size: 2.5rem;
+      font-weight: 800; color: var(--accent); line-height: 1; min-width: 50px;
+    }
+    .step h4 { font-family: 'Syne', sans-serif; font-weight: 700; margin-bottom: 0.5rem; }
+    .step p { font-size: 0.88rem; color: rgba(255,255,255,.55); line-height: 1.65; }
+
+    /* ── CTA BANNER ── */
+    .cta-banner {
+      max-width: 1200px; margin: 6rem auto;
+      padding: 0 2.5rem;
+    }
+    .cta-inner {
+      background: var(--accent); border-radius: 16px;
+      padding: 4rem; text-align: center; position: relative; overflow: hidden;
+    }
+    .cta-inner::before {
+      content: 'INVENTRACK'; position: absolute;
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 9rem; color: rgba(255,255,255,.07);
+      top: 50%; left: 50%; transform: translate(-50%,-50%);
+      white-space: nowrap; pointer-events: none;
+    }
+    .cta-inner h2 {
+      font-family: 'Syne', sans-serif; font-size: 2.2rem;
+      font-weight: 800; color: #fff; margin-bottom: 0.8rem;
+    }
+    .cta-inner p { color: rgba(255,255,255,.8); margin-bottom: 2rem; }
+    .btn-white {
+      display: inline-block; padding: 0.9rem 2.2rem;
+      background: #fff; color: var(--accent);
+      border-radius: 6px; font-weight: 600; text-decoration: none;
+      font-family: 'DM Sans', sans-serif; transition: transform .2s, box-shadow .2s;
+    }
+    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 8px 24px rgba(0,0,0,.2); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #070b16;
+      color: rgba(255,255,255,.5);
+      padding: 3rem 2.5rem 2rem;
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem;
+      padding-bottom: 2rem;
+      border-bottom: 1px solid rgba(255,255,255,.08);
+    }
+    .footer-brand .logo { color: #fff; display: block; margin-bottom: 0.8rem; }
+    .footer-brand p { font-size: 0.85rem; line-height: 1.7; max-width: 280px; }
+    .footer-col h5 {
+      font-family: 'Syne', sans-serif; font-size: 0.8rem;
+      font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase;
+      color: rgba(255,255,255,.7); margin-bottom: 1rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+    .footer-col ul a { font-size: 0.85rem; color: rgba(255,255,255,.45); text-decoration: none; transition: color .2s; }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom {
+      max-width: 1200px; margin: 0 auto;
+      padding-top: 1.5rem;
+      display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 0.5rem;
+    }
+    .footer-bottom p { font-size: 0.8rem; }
+    .footer-bottom a { color: var(--accent); text-decoration: none; }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(28px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ── MOBILE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; padding-top: 6rem; }
+      .hero-visual { order: -1; }
+      .feat-grid { grid-template-columns: 1fr 1fr; }
+      .steps { grid-template-columns: 1fr; }
+      .stats-strip { grid-template-columns: repeat(2, 1fr); }
+      .footer-inner { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 600px) {
+      nav { padding: 1rem 1.2rem; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .nav-cta .btn-outline { display: none; }
+      .hero { padding: 5.5rem 1.2rem 3rem; }
+      .feat-grid { grid-template-columns: 1fr; }
+      .stats-strip { grid-template-columns: repeat(2, 1fr); padding: 2rem 1.2rem; }
+      .features, .cta-banner { padding-left: 1.2rem; padding-right: 1.2rem; }
+      .how { padding: 4rem 1.2rem; }
+      .footer-inner { grid-template-columns: 1fr; padding-left: 1.2rem; }
+      .footer { padding: 2rem 1.2rem; }
+      .mock-stats { grid-template-columns: repeat(2, 1fr); }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">INVEN<span>TRACK</span></a>
+  <ul class="nav-links">
+    <li><a href="#features">Features</a></li>
+    <li><a href="#how">How It Works</a></li>
+  </ul>
+  <div class="nav-cta">
+    <a href="/login" class="btn-outline">Login</a>
+    <a href="/login" class="btn-primary">Get Started</a>
+  </div>
+  <div class="hamburger" onclick="this.classList.toggle('open')">
+    <span></span><span></span><span></span>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section style="background: var(--surface);">
+  <div class="hero">
+    <div class="hero-text">
+      <div class="badge">Inventory Intelligence Platform</div>
+      <h1>Track Every Batch.<br/>Never Miss an <em>Expiry.</em></h1>
+      <p class="hero-sub">INVENTRACK gives you real-time visibility into your inventory — batch-level tracking, expiry alerts, and smart stock management built for modern businesses.</p>
+      <div class="hero-actions">
+        <a href="/login" class="btn-lg btn-lg-primary">Start Managing Free</a>
+        <a href="#features" class="btn-lg btn-lg-outline">See Features</a>
+      </div>
+    </div>
+    <div class="hero-visual">
+      <div class="dashboard-mock">
+        <div class="mock-header">
+          <div class="mock-dot" style="background:#ff5f57"></div>
+          <div class="mock-dot" style="background:#ffbd2e"></div>
+          <div class="mock-dot" style="background:#28c940"></div>
+          <span class="mock-title">INVENTRACK Dashboard</span>
+        </div>
+        <div class="mock-body">
+          <div class="mock-stats">
+            <div class="stat-card">
+              <div class="stat-num">284</div>
+              <div class="stat-lbl">Total Products</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">12</div>
+              <div class="stat-lbl">Expiring Soon</div>
+            </div>
+            <div class="stat-card">
+              <div class="stat-num">47</div>
+              <div class="stat-lbl">Batches Active</div>
+            </div>
+          </div>
+          <table class="mock-table">
+            <thead>
+              <tr>
+                <th>Product</th><th>Batch</th><th>Qty</th><th>Expiry</th><th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              <tr><td>PARACETAMOL</td><td>B-2041</td><td>500</td><td>Jul 15</td><td><span class="pill pill-warn">Soon</span></td></tr>
+              <tr><td>AMOXICILLIN</td><td>B-2038</td><td>120</td><td>Sep 02</td><td><span class="pill pill-ok">Good</span></td></tr>
+              <tr><td>VITAMIN-C</td><td>B-2044</td><td>300</td><td>Aug 20</td><td><span class="pill pill-ok">Good</span></td></tr>
+              <tr><td>IBUPROFEN</td><td>B-2029</td><td>80</td><td>Jun 28</td><td><span class="pill pill-warn">Soon</span></td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- STATS STRIP -->
+<div class="stats-strip">
+  <div>
+    <div class="strip-num">10K+</div>
+    <div class="strip-lbl">Batches Tracked</div>
+  </div>
+  <div>
+    <div class="strip-num">99.9%</div>
+    <div class="strip-lbl">Uptime Reliability</div>
+  </div>
+  <div>
+    <div class="strip-num">30 day</div>
+    <div class="strip-lbl">Advance Expiry Alerts</div>
+  </div>
+  <div>
+    <div class="strip-num">FIFO</div>
+    <div class="strip-lbl">Smart Sell Logic</div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="features" id="features">
+  <div class="section-label">What We Offer</div>
+  <h2 class="section-title">Everything you need to manage<br/>inventory with confidence.</h2>
+  <div class="feat-grid">
+    <div class="feat-card">
+      <div class="feat-icon">📦</div>
+      <h3>Batch-Level Tracking</h3>
+      <p>Add products with batch numbers, quantities, and expiry dates. Know exactly where every unit is, at any time.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">⚠️</div>
+      <h3>Expiry Alerts</h3>
+      <p>Get notified 30 days before stock expires. Act before it's too late — avoid wastage and compliance issues.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🔄</div>
+      <h3>FIFO Auto-Selling</h3>
+      <p>When you sell, INVENTRACK automatically deducts from the earliest-expiring batch first. No manual effort.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📊</div>
+      <h3>Real-Time Dashboard</h3>
+      <p>A clean overview of all your stock, expiry timelines, and alerts — updated instantly every time you make a move.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">🔐</div>
+      <h3>Secure User Accounts</h3>
+      <p>Each business gets its own isolated inventory. Your data is never shared or visible to other users.</p>
+    </div>
+    <div class="feat-card">
+      <div class="feat-icon">📱</div>
+      <h3>Mobile-Friendly</h3>
+      <p>Fully responsive design — manage stock from your phone on the warehouse floor or your desktop in the office.</p>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="how" id="how">
+  <div class="how-inner">
+    <div class="section-label">Simple Process</div>
+    <h2 class="section-title">Up and running in minutes.</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">01</div>
+        <div>
+          <h4>Create Your Account</h4>
+          <p>Register with your email. Your inventory space is private, secure, and ready immediately.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">02</div>
+        <div>
+          <h4>Add Your Batches</h4>
+          <p>Input product name, batch number, quantity, and expiry date. As simple as filling a form.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-num">03</div>
+        <div>
+          <h4>Track & Sell</h4>
+          <p>Sell products with one click. INVENTRACK handles the FIFO logic and expiry monitoring automatically.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<div class="cta-banner">
+  <div class="cta-inner">
+    <h2>Ready to take control of your inventory?</h2>
+    <p>Join businesses already managing smarter with INVENTRACK.</p>
+    <a href="/login" class="btn-white">Get Started Now →</a>
+  </div>
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="logo">INVEN<span style="color:var(--accent)">TRACK</span></a>
+      <p>A smart inventory management system built for accuracy, speed, and simplicity. Track batches, monitor expiry, and sell with confidence.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Product</h5>
+      <ul>
+        <li><a href="#features">Features</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="/login">Dashboard</a></li>
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Account</h5>
+      <ul>
+        <li><a href="/login">Login</a></li>
+        <li><a href="/login">Register</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 INVENTRACK. All rights reserved. Developed by <a href="#">Mayur B Gund</a>.</p>
+    <p>Built with precision &amp; care.</p>
+  </div>
+</footer>
+
+</body>
+</html>

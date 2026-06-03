@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>{% block title %}INVENTRACK{% endblock %}</title>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --ink: #0a0f1e;
+      --surface: #f4f2ed;
+      --accent: #d4500a;
+      --muted: #7a7a72;
+      --card: #ffffff;
+      --border: #e0ddd6;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--surface);
+      color: var(--ink);
+      min-height: 100vh;
+      display: flex; flex-direction: column;
+    }
+
+    main { flex: 1; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 1rem 2.5rem;
+      background: rgba(244,242,237,.95);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .logo {
+      font-family: 'Syne', sans-serif; font-weight: 800;
+      font-size: 1.4rem; letter-spacing: 0.08em;
+      color: var(--ink); text-decoration: none;
+    }
+    .logo span { color: var(--accent); }
+
+    .nav-links { display: flex; gap: 0.5rem; list-style: none; }
+    .nav-links a {
+      padding: 0.45rem 0.9rem; border-radius: 6px;
+      font-size: 0.88rem; font-weight: 500;
+      color: var(--muted); text-decoration: none;
+      transition: background .15s, color .15s;
+    }
+    .nav-links a:hover, .nav-links a.active {
+      background: rgba(212,80,10,.08); color: var(--accent);
+    }
+
+    .nav-right { display: flex; gap: 0.7rem; align-items: center; }
+    .btn-ghost {
+      padding: 0.45rem 1rem; border-radius: 6px;
+      font-size: 0.85rem; font-weight: 500;
+      color: var(--muted); text-decoration: none;
+      transition: background .15s, color .15s;
+      border: 1px solid var(--border);
+    }
+    .btn-ghost:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+    .btn-accent {
+      padding: 0.45rem 1.2rem; border-radius: 6px;
+      background: var(--accent); color: #fff;
+      font-size: 0.85rem; font-weight: 500;
+      text-decoration: none; border: 1px solid var(--accent);
+      transition: background .15s;
+    }
+    .btn-accent:hover { background: #b8420a; }
+
+    /* ── FLASH MESSAGES ── */
+    .flash-wrap { padding: 0.8rem 2.5rem; }
+    .flash {
+      padding: 0.8rem 1.2rem; border-radius: 8px;
+      font-size: 0.88rem; margin-bottom: 0.5rem;
+    }
+    .flash-success { background: #e8f5e9; border: 1px solid #c8e6c9; color: #2e7d32; }
+    .flash-error   { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; }
+    .flash-info    { background: #eff6ff; border: 1px solid #bfdbfe; color: #1d4ed8; }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #070b16;
+      color: rgba(255,255,255,.45);
+      border-top: 1px solid rgba(255,255,255,.06);
+    }
+    .footer-inner {
+      max-width: 1200px; margin: 0 auto;
+      padding: 2.5rem 2.5rem 1.5rem;
+      display: grid; grid-template-columns: 2fr 1fr 1fr;
+      gap: 2.5rem;
+      border-bottom: 1px solid rgba(255,255,255,.06);
+    }
+    .footer-brand .logo { color: #fff; display: block; margin-bottom: 0.6rem; }
+    .footer-brand p { font-size: 0.82rem; line-height: 1.65; max-width: 260px; }
+    .footer-col h5 {
+      font-family: 'Syne', sans-serif; font-size: 0.75rem;
+      font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase;
+      color: rgba(255,255,255,.6); margin-bottom: 0.8rem;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.5rem; }
+    .footer-col ul a {
+      font-size: 0.82rem; color: rgba(255,255,255,.4);
+      text-decoration: none; transition: color .2s;
+    }
+    .footer-col ul a:hover { color: #fff; }
+    .footer-bottom {
+      max-width: 1200px; margin: 0 auto;
+      padding: 1.2rem 2.5rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 0.5rem;
+    }
+    .footer-bottom p { font-size: 0.77rem; }
+    .footer-bottom a { color: var(--accent); text-decoration: none; }
+
+    /* ── UTILS ── */
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 2.5rem; }
+    .page-header {
+      padding: 2.5rem 0 1.5rem;
+      border-bottom: 1px solid var(--border);
+      margin-bottom: 2rem;
+    }
+    .page-header h1 {
+      font-family: 'Syne', sans-serif;
+      font-size: 1.9rem; font-weight: 800;
+    }
+    .page-header p { color: var(--muted); font-size: 0.9rem; margin-top: 0.3rem; }
+
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(16px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .fade-in { animation: fadeUp .5s ease both; }
+
+    /* responsive nav */
+    .hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .hamburger span { width: 22px; height: 2px; background: var(--ink); border-radius: 2px; transition: all .3s; }
+
+    @media (max-width: 768px) {
+      nav { padding: 0.8rem 1.2rem; }
+      .nav-links { display: none; }
+      .hamburger { display: flex; }
+      .footer-inner { grid-template-columns: 1fr; padding: 2rem 1.2rem 1rem; }
+      .footer-bottom { padding: 1rem 1.2rem; }
+      .container { padding: 0 1.2rem; }
+      .flash-wrap { padding: 0.8rem 1.2rem; }
+    }
+  </style>
+
+  {% block head %}{% endblock %}
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="/" class="logo">INVEN<span>TRACK</span></a>
+
+  {% if session.get('email') %}
+  <ul class="nav-links">
+    <li><a href="/" {% if request.endpoint == 'home' %}class="active"{% endif %}>Dashboard</a></li>
+    <li><a href="/add_batch" {% if request.endpoint == 'add_batchs' %}class="active"{% endif %}>Add Batch</a></li>
+    <li><a href="/sell_product" {% if request.endpoint == 'sell_product_route' %}class="active"{% endif %}>Sell</a></li>
+    <li><a href="/get_expiring_stock" {% if request.endpoint == 'get_expiring_stock_route' %}class="active"{% endif %}>Expiring Soon</a></li>
+  </ul>
+  <div class="nav-right">
+    <span style="font-size:.82rem; color:var(--muted);">{{ session['email'] }}</span>
+    <a href="/logout" class="btn-ghost">Logout</a>
+  </div>
+  {% else %}
+  <ul class="nav-links">
+    <li><a href="/#features">Features</a></li>
+    <li><a href="/#how">How It Works</a></li>
+  </ul>
+  <div class="nav-right">
+    <a href="/login" class="btn-ghost">Login</a>
+    <a href="/login" class="btn-accent">Get Started</a>
+  </div>
+  {% endif %}
+
+  <button class="hamburger" aria-label="Menu" onclick="document.querySelector('.nav-links').style.display = document.querySelector('.nav-links').style.display === 'flex' ? 'none' : 'flex'">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- FLASH MESSAGES -->
+{% with messages = get_flashed_messages(with_categories=true) %}
+  {% if messages %}
+  <div class="flash-wrap">
+    {% for category, message in messages %}
+    <div class="flash flash-{{ category }}">{{ message }}</div>
+    {% endfor %}
+  </div>
+  {% endif %}
+{% endwith %}
+
+<!-- PAGE CONTENT -->
+<main>
+  {% block content %}{% endblock %}
+</main>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand">
+      <a href="/" class="logo">INVEN<span style="color:var(--accent)">TRACK</span></a>
+      <p>Smart inventory management for batch tracking, expiry monitoring, and FIFO stock control — all in one platform.</p>
+    </div>
+    <div class="footer-col">
+      <h5>Navigate</h5>
+      <ul>
+        {% if session.get('email') %}
+        <li><a href="/">Dashboard</a></li>
+        <li><a href="/add_batch">Add Batch</a></li>
+        <li><a href="/sell_product">Sell Product</a></li>
+        <li><a href="/get_expiring_stock">Expiring Stock</a></li>
+        {% else %}
+        <li><a href="/#features">Features</a></li>
+        <li><a href="/#how">How It Works</a></li>
+        <li><a href="/login">Login</a></li>
+        {% endif %}
+      </ul>
+    </div>
+    <div class="footer-col">
+      <h5>Account</h5>
+      <ul>
+        {% if session.get('email') %}
+        <li><a href="/logout">Logout</a></li>
+        {% else %}
+        <li><a href="/login">Sign In</a></li>
+        <li><a href="/login">Register</a></li>
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p>© 2026 <strong style="color:rgba(255,255,255,.65)">INVENTRACK</strong>. All rights reserved. Developed by <a href="#">Mayur B Gund</a>.</p>
+    <p>Built with precision &amp; care.</p>
+  </div>
+</footer>
+
+</body>
+</html>
