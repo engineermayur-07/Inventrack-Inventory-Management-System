@@ -3,357 +3,277 @@
 
 {% block head %}
 <style>
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     SELL PRODUCT
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
   .form-page {
-    max-width: 1280px;
+    max-width: 1360px;
     margin: 0 auto;
-    padding: 2.5rem 2.5rem 4rem;
+    padding: 2rem 2rem 5rem;
   }
 
   /* ── PAGE HEADER ── */
-  .page-header {
-    display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 1rem;
-    margin-bottom: 2.5rem;
-    animation: fadeUp .4s ease both;
+  .page-head {
+    display: flex; align-items: flex-end; justify-content: space-between;
+    flex-wrap: wrap; gap: 1rem; margin-bottom: 2rem;
   }
   .breadcrumb {
-    font-size: 0.75rem; color: var(--muted);
-    margin-bottom: 0.4rem;
     display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.75rem; color: var(--muted); margin-bottom: 0.35rem;
   }
-  .breadcrumb a { color: var(--muted); text-decoration: none; transition: color .2s; }
+  .breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.15s; }
   .breadcrumb a:hover { color: var(--accent); }
   .breadcrumb-sep { opacity: .4; }
   .page-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.6rem, 3vw, 2.1rem);
-    font-weight: 800; color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 900; color: var(--ink);
+    letter-spacing: -0.02em; line-height: 1.1;
   }
-  .page-title span { color: var(--accent); }
-  .page-sub { color: var(--muted); font-size: 0.88rem; margin-top: 0.3rem; }
+  .page-sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; }
+  .btn-back {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.55rem 1.1rem;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-size: 0.82rem; font-weight: 600; color: var(--muted);
+    text-decoration: none; background: var(--white); transition: all 0.15s; white-space: nowrap;
+    align-self: flex-end;
+  }
+  .btn-back:hover { border-color: var(--ink); background: var(--ink); color: #fff; }
 
   /* ── LAYOUT ── */
   .form-layout {
     display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 1.5rem;
+    grid-template-columns: 1fr 300px;
+    gap: 1.25rem;
     align-items: start;
   }
 
   /* ── FORM CARD ── */
   .form-card {
-    background: var(--card);
+    background: var(--white);
     border: 1px solid var(--border);
-    border-radius: 16px;
-    overflow: hidden;
-    animation: fadeUp .5s ease both;
-    animation-delay: .1s;
+    border-radius: 16px; overflow: hidden;
   }
-  .form-card-header {
+  .form-card-head {
     display: flex; align-items: center; gap: 0.6rem;
-    padding: 1.3rem 1.8rem;
+    padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
   }
-  .form-card-dot {
-    width: 8px; height: 8px; border-radius: 50%;
-    background: var(--accent);
-  }
-  .form-card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.95rem; font-weight: 700; color: var(--ink);
-  }
-  .fifo-badge {
+  .form-card-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .form-card-title { font-size: 0.9rem; font-weight: 700; color: var(--ink); }
+  .fifo-tag {
     margin-left: auto;
     display: inline-flex; align-items: center; gap: 0.3rem;
-    padding: 0.2rem 0.7rem;
-    background: rgba(212,80,10,.1);
-    border: 1px solid rgba(212,80,10,.2);
+    padding: 0.2rem 0.65rem;
+    background: rgba(224,90,26,.1);
+    border: 1px solid rgba(224,90,26,.2);
     border-radius: 100px;
     font-size: 0.68rem; font-weight: 700;
     letter-spacing: 0.06em; color: var(--accent);
   }
-  .form-card-body { padding: 2rem 1.8rem; }
+  .form-card-body { padding: 1.75rem 1.5rem; }
 
   /* ── FIELDS ── */
-  .field { margin-bottom: 1.4rem; }
-  .field:last-of-type { margin-bottom: 0; }
-
+  .field { margin-bottom: 1.25rem; }
   label {
-    display: block;
-    font-size: 0.78rem; font-weight: 700;
+    display: block; font-size: 0.76rem; font-weight: 700;
     letter-spacing: 0.06em; text-transform: uppercase;
     color: var(--ink); margin-bottom: 0.45rem;
   }
-  .field-hint {
-    font-size: 0.72rem; color: var(--muted);
-    margin-top: 0.35rem;
-    font-weight: 400; text-transform: none; letter-spacing: 0;
-  }
+  .field-hint { font-size: 0.72rem; color: var(--muted); margin-top: 0.3rem; font-weight: 400; text-transform: none; letter-spacing: 0; line-height: 1.4; }
 
   .input-wrap { position: relative; }
-  .input-icon {
-    position: absolute; left: 0.9rem; top: 50%;
-    transform: translateY(-50%);
-    font-size: 1rem; pointer-events: none; opacity: .45;
-  }
+  .input-icon { position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); width: 16px; height: 16px; opacity: .35; pointer-events: none; }
+  .input-badge { position: absolute; right: 0.75rem; top: 50%; transform: translateY(-50%); font-size: 0.6rem; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; color: var(--accent); background: rgba(224,90,26,.08); padding: 0.15rem 0.45rem; border-radius: 4px; pointer-events: none; }
 
-  input[type="text"],
-  input[type="number"] {
-    width: 100%;
-    padding: 0.75rem 0.9rem 0.75rem 2.6rem;
-    border: 1.5px solid var(--border);
-    border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.92rem; color: var(--ink);
+  input[type="text"], input[type="number"] {
+    width: 100%; height: 46px;
+    padding: 0 0.875rem 0 2.5rem;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem; color: var(--ink);
     background: var(--surface); outline: none;
-    transition: border-color .2s, box-shadow .2s, background .2s;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
   }
-  input:focus {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(212,80,10,.1);
-    background: #fff;
-  }
-  input::placeholder { color: #b5b2ab; }
+  input:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(224,90,26,.1); background: #fff; }
+  input::placeholder { color: #c4c2bc; }
 
-  .input-badge {
-    position: absolute; right: 0.75rem; top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.62rem; font-weight: 700;
-    letter-spacing: 0.08em; color: var(--accent);
-    background: rgba(212,80,10,.08);
-    padding: 0.15rem 0.45rem; border-radius: 4px;
-    pointer-events: none;
-  }
-
-  /* qty stepper */
-  .qty-wrap {
+  /* Qty stepper */
+  .qty-stepper {
     display: flex; align-items: center;
-    border: 1.5px solid var(--border);
-    border-radius: 10px; overflow: hidden;
-    background: var(--surface);
-    transition: border-color .2s, box-shadow .2s;
+    border: 1.5px solid var(--border); border-radius: 10px;
+    overflow: hidden; background: var(--surface);
+    transition: border-color 0.15s, box-shadow 0.15s;
+    height: 46px;
   }
-  .qty-wrap:focus-within {
-    border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(212,80,10,.1);
-    background: #fff;
-  }
+  .qty-stepper:focus-within { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(224,90,26,.1); background: #fff; }
   .qty-btn {
-    width: 48px; height: 48px;
-    border: none; background: none;
-    font-size: 1.2rem; cursor: pointer;
-    color: var(--muted);
-    transition: background .15s, color .15s;
-    flex-shrink: 0;
-    display: flex; align-items: center; justify-content: center;
+    width: 46px; min-width: 46px; height: 44px;
+    border: none; background: none; font-size: 1.2rem; cursor: pointer;
+    color: var(--muted); display: flex; align-items: center; justify-content: center;
+    transition: background 0.12s, color 0.12s; flex-shrink: 0; user-select: none;
   }
-  .qty-btn:hover { background: rgba(212,80,10,.08); color: var(--accent); }
+  .qty-btn:hover { background: rgba(224,90,26,.08); color: var(--accent); }
   .qty-input {
-    flex: 1; border: none !important;
-    box-shadow: none !important;
-    background: transparent !important;
-    text-align: center;
-    padding: 0.75rem 0 !important;
-    font-weight: 700; font-size: 1.1rem !important;
+    flex: 1; border: none !important; box-shadow: none !important;
+    background: transparent !important; text-align: center;
+    height: 44px !important; padding: 0 !important;
+    font-weight: 700; font-size: 1.05rem !important;
   }
 
-  /* confirm checkbox */
-  .confirm-row {
+  /* Confirm checkbox */
+  .confirm-box {
     display: flex; align-items: flex-start; gap: 0.75rem;
-    background: #fff3e0;
-    border: 1px solid #ffe0b2;
-    border-radius: 10px;
-    padding: 1rem 1.1rem;
-    margin-top: 1.5rem;
-    cursor: pointer;
+    background: #fffbeb; border: 1.5px solid #fde68a;
+    border-radius: 12px; padding: 1rem 1.1rem;
+    margin-top: 1.25rem; cursor: pointer;
+    transition: border-color 0.15s;
   }
-  .confirm-row input[type="checkbox"] {
+  .confirm-box:focus-within { border-color: #f59e0b; }
+  .confirm-checkbox {
     width: 18px; height: 18px; min-width: 18px;
     padding: 0; margin-top: 2px;
-    accent-color: var(--accent);
-    cursor: pointer;
+    accent-color: var(--accent); cursor: pointer;
+    border-radius: 4px;
   }
   .confirm-label {
-    font-size: 0.83rem;
-    color: #7a4000;
-    line-height: 1.55;
-    cursor: pointer;
-    font-weight: 500;
-    letter-spacing: 0; text-transform: none;
-    margin-bottom: 0;
+    font-size: 0.83rem; color: #78350f; line-height: 1.55;
+    cursor: pointer; font-weight: 500;
+    letter-spacing: 0; text-transform: none; margin-bottom: 0;
   }
 
-  /* error alert */
+  /* Alerts */
   .form-alert {
-    display: none;
-    padding: 0.8rem 1.1rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    margin-bottom: 1.2rem;
-    align-items: center; gap: 0.6rem;
+    display: none; align-items: center; gap: 0.6rem;
+    padding: 0.8rem 1rem; border-radius: 10px;
+    font-size: 0.85rem; font-weight: 500; margin-bottom: 1.25rem;
   }
   .form-alert.show { display: flex; }
-  .form-alert-err  { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; }
-  .form-alert-warn { background: #fff3e0; border: 1px solid #ffe0b2; color: #c05000; }
+  .alert-err  { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; }
+  .alert-warn { background: #fffbeb; border: 1px solid #fde68a; color: #92400e; }
 
-  /* actions */
+  /* Actions */
   .form-actions {
-    display: flex; gap: 0.8rem; align-items: center;
-    margin-top: 1.8rem; padding-top: 1.5rem;
-    border-top: 1px solid var(--border);
-    flex-wrap: wrap;
+    display: flex; gap: 0.75rem; align-items: center;
+    margin-top: 1.75rem; padding-top: 1.5rem;
+    border-top: 1px solid var(--border); flex-wrap: wrap;
   }
   .submit-btn {
-    flex: 1;
-    padding: 0.9rem 1.5rem;
+    flex: 1; height: 48px;
     background: var(--accent); color: #fff;
     border: none; border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem; font-weight: 600;
-    cursor: pointer;
-    transition: background .2s, transform .15s, box-shadow .2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 700; cursor: pointer; min-width: 140px;
     display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
   }
-  .submit-btn:hover {
-    background: #b8420a; transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(212,80,10,.3);
+  .submit-btn:hover:not(:disabled) { background: var(--accent-h); transform: translateY(-1px); box-shadow: 0 6px 20px rgba(224,90,26,.3); }
+  .submit-btn:disabled { opacity: .45; cursor: not-allowed; }
+  .cancel-link {
+    display: inline-flex; align-items: center; height: 48px;
+    padding: 0 1.25rem; border: 1.5px solid var(--border); border-radius: 10px;
+    font-size: 0.88rem; font-weight: 600; color: var(--muted);
+    text-decoration: none; background: var(--white); transition: all 0.15s; white-space: nowrap;
   }
-  .submit-btn:disabled {
-    opacity: .55; cursor: not-allowed; transform: none; box-shadow: none;
-  }
-  .cancel-btn {
-    padding: 0.9rem 1.4rem;
-    background: var(--surface); color: var(--muted);
-    border: 1.5px solid var(--border); border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem; font-weight: 500;
-    text-decoration: none; transition: all .2s; white-space: nowrap;
-  }
-  .cancel-btn:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
+  .cancel-link:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
 
   /* ── SIDEBAR ── */
-  .info-card {
-    background: var(--card);
-    border: 1px solid var(--border);
-    border-radius: 14px; overflow: hidden;
-    animation: fadeUp .55s ease both;
-    animation-delay: .2s;
-    margin-bottom: 1.2rem;
-  }
-  .info-card:last-child { margin-bottom: 0; }
-  .info-card-header {
-    background: var(--ink);
-    padding: 0.9rem 1.3rem;
-    display: flex; align-items: center; gap: 0.5rem;
-  }
-  .info-card-header h4 {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.82rem; font-weight: 700; color: #fff;
-  }
-  .info-card-body { padding: 1.2rem 1.3rem; }
+  .sidebar { display: flex; flex-direction: column; gap: 1rem; }
+  .side-card { background: var(--white); border: 1px solid var(--border); border-radius: 14px; overflow: hidden; }
+  .side-card-head { background: var(--ink); padding: 0.8rem 1.2rem; display: flex; align-items: center; gap: 0.6rem; }
+  .side-card-head h4 { font-size: 0.82rem; font-weight: 700; color: #fff; }
+  .side-card-body { padding: 1.1rem 1.2rem; }
 
-  /* FIFO explainer */
-  .fifo-steps {
-    display: flex; flex-direction: column; gap: 0; counter-reset: fifo;
+  /* Summary */
+  .summary-grid {
+    background: var(--ink); border-radius: 10px;
+    padding: 1rem 1.1rem;
   }
+  .summary-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    font-size: 0.78rem;
+  }
+  .summary-row:last-child { border-bottom: none; }
+  .summary-key { color: rgba(255,255,255,.4); }
+  .summary-val { color: #fff; font-weight: 700; }
+  .summary-val.accent { color: #f97316; }
+  .summary-val.danger { color: #f87171; }
+
+  /* FIFO steps */
+  .fifo-steps { display: flex; flex-direction: column; gap: 0; }
   .fifo-step {
-    display: flex; align-items: flex-start; gap: 0.8rem;
-    padding: 0.75rem 0;
+    display: flex; align-items: flex-start; gap: 0.75rem;
+    padding: 0.7rem 0;
     border-bottom: 1px solid var(--border);
-    position: relative;
   }
   .fifo-step:last-child { border-bottom: none; padding-bottom: 0; }
-  .fifo-step-num {
-    width: 24px; height: 24px; border-radius: 50%;
+  .fifo-num {
+    width: 22px; height: 22px; border-radius: 50%;
     background: var(--accent); color: #fff;
-    font-size: 0.7rem; font-weight: 800;
+    font-size: 0.68rem; font-weight: 800;
     display: flex; align-items: center; justify-content: center;
     flex-shrink: 0; margin-top: 1px;
   }
-  .fifo-step-text { font-size: 0.81rem; color: var(--muted); line-height: 1.55; }
-  .fifo-step-text strong { color: var(--ink); }
+  .fifo-text { font-size: 0.8rem; color: var(--muted); line-height: 1.55; }
+  .fifo-text strong { color: var(--ink); }
 
-  /* live summary */
-  .sell-summary {
-    background: var(--ink);
-    border-radius: 12px;
-    padding: 1.2rem;
-  }
-  .summary-row {
-    display: flex; justify-content: space-between;
-    font-size: 0.78rem; padding: 0.35rem 0;
-    border-bottom: 1px solid rgba(255,255,255,.07);
-    color: rgba(255,255,255,.5);
-  }
-  .summary-row:last-child { border-bottom: none; }
-  .summary-val { color: #fff; font-weight: 700; }
-  .summary-val.accent { color: var(--accent); }
-
-  /* warning strip */
-  .warn-strip {
-    display: flex; align-items: flex-start; gap: 0.6rem;
-    background: #fef2f2; border: 1px solid #fecaca;
-    border-radius: 10px; padding: 0.9rem 1rem;
-    font-size: 0.8rem; color: #b91c1c; line-height: 1.5;
-  }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  /* Warning card */
+  .warn-card { border-color: #fecaca; }
+  .warn-card .side-card-head { background: #b91c1c; }
+  .warn-text { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
+  .warn-text strong { color: #b91c1c; display: block; margin-bottom: 0.25rem; }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 960px) {
     .form-layout { grid-template-columns: 1fr; }
-    .sidebar-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-    .info-card { margin-bottom: 0; }
+    .sidebar { display: grid; grid-template-columns: 1fr 1fr; }
   }
-  @media (max-width: 600px) {
-    .form-page { padding: 1.5rem 1.2rem 3rem; }
-    .sidebar-col { grid-template-columns: 1fr; }
-    .form-card-body { padding: 1.4rem 1.2rem; }
+  @media (max-width: 768px) {
+    .form-page { padding: 1.25rem 1.25rem 4rem; }
+    .sidebar { grid-template-columns: 1fr; }
+    .form-card-body { padding: 1.25rem; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="form-page">
+<div class="form-page anim-up">
 
-  <!-- PAGE HEADER -->
-  <div class="page-header">
+  <!-- HEADER -->
+  <div class="page-head">
     <div>
       <div class="breadcrumb">
         <a href="/">Dashboard</a>
         <span class="breadcrumb-sep">›</span>
         <span>Sell Product</span>
       </div>
-      <h1 class="page-title">Sell a <span>Product</span></h1>
-      <p class="page-sub">Deduct stock using automatic FIFO (earliest expiry first) logic.</p>
+      <h1 class="page-title">Sell a Product</h1>
+      <p class="page-sub">Deduct stock automatically using FIFO — earliest expiry batch first.</p>
     </div>
-    <a href="/" class="cancel-btn" style="align-self:flex-end;">← Back to Dashboard</a>
+    <a href="/" class="btn-back">← Back</a>
   </div>
 
   <div class="form-layout">
 
     <!-- FORM -->
-    <div class="form-card">
-      <div class="form-card-header">
+    <div class="form-card anim-up anim-up-d1">
+      <div class="form-card-head">
         <div class="form-card-dot"></div>
         <span class="form-card-title">Sale Details</span>
-        <span class="fifo-badge">⚡ FIFO Auto-Logic</span>
+        <span class="fifo-tag">⚡ FIFO Auto-Logic</span>
       </div>
       <div class="form-card-body">
 
-        <div class="form-alert form-alert-err" id="formErr">
-          ⚠ Please fill in all required fields before submitting.
+        <div class="form-alert alert-err"  id="formErr">
+          <span>✕</span> Please fill in all required fields.
         </div>
-        <div class="form-alert form-alert-warn" id="confirmErr">
-          ✋ Please confirm that you want to proceed with this sale.
+        <div class="form-alert alert-warn" id="confirmErr">
+          <span>⚠</span> Please confirm the sale by checking the box below.
         </div>
 
         <form action="/sell_product" method="POST" id="sellForm" novalidate>
@@ -362,48 +282,46 @@
           <div class="field">
             <label for="product_name">Product Name <span style="color:var(--accent)">*</span></label>
             <div class="input-wrap">
-              <span class="input-icon">📦</span>
-              <input
-                type="text" id="product_name" name="product_name"
+              <svg class="input-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6M5 5h4M5 11h3"/>
+              </svg>
+              <input type="text" id="product_name" name="product_name"
                 placeholder="e.g. PARACETAMOL"
                 required autocomplete="off"
-                oninput="this.value=this.value.toUpperCase(); updateSummary()"
-              />
-              <span class="input-badge">AUTO CAPS</span>
+                oninput="this.value=this.value.toUpperCase(); updateSummary()"/>
+              <span class="input-badge">Auto Caps</span>
             </div>
-            <div class="field-hint">Must exactly match the product name in your inventory.</div>
+            <div class="field-hint">Must exactly match the product name stored in your inventory.</div>
           </div>
 
           <!-- Quantity -->
           <div class="field">
             <label for="quantity">Quantity to Sell <span style="color:var(--accent)">*</span></label>
-            <div class="qty-wrap">
-              <button type="button" class="qty-btn" onclick="changeQty(-1)">−</button>
-              <input
-                type="number" id="quantity" name="quantity"
+            <div class="qty-stepper">
+              <button type="button" class="qty-btn" onclick="changeQty(-1)" tabindex="-1">−</button>
+              <input type="number" id="quantity" name="quantity"
                 class="qty-input" value="1" min="1" required
-                oninput="updateSummary()"
-              />
-              <button type="button" class="qty-btn" onclick="changeQty(1)">＋</button>
+                oninput="updateSummary()"/>
+              <button type="button" class="qty-btn" onclick="changeQty(1)" tabindex="-1">＋</button>
             </div>
-            <div class="field-hint">INVENTRACK will deduct from earliest-expiring batch(es) first.</div>
+            <div class="field-hint">INVENTRACK will deduct from the earliest-expiring batch first.</div>
           </div>
 
           <!-- Confirm checkbox -->
-          <label class="confirm-row" for="confirmCheck">
-            <input type="checkbox" id="confirmCheck" onchange="toggleSubmit()" />
+          <label class="confirm-box" for="confirmCheck">
+            <input type="checkbox" class="confirm-checkbox" id="confirmCheck" onchange="toggleSubmit()"/>
             <span class="confirm-label">
-              I confirm that I want to sell <strong id="confirm-qty">1 unit(s)</strong>
-              of <strong id="confirm-product">this product</strong>.
-              This action will permanently deduct stock and cannot be undone.
+              I confirm I want to sell <strong id="confirm-qty">1 unit(s)</strong> of
+              <strong id="confirm-product">this product</strong>.
+              This action permanently deducts stock and <strong>cannot be undone</strong>.
             </span>
           </label>
 
           <!-- Actions -->
           <div class="form-actions">
-            <a href="/" class="cancel-btn">Cancel</a>
+            <a href="/" class="cancel-link">Cancel</a>
             <button type="submit" class="submit-btn" id="submitBtn" disabled>
-              <span>↗</span> Confirm Sale
+              ↗ Confirm Sale
             </button>
           </div>
 
@@ -412,74 +330,75 @@
     </div>
 
     <!-- SIDEBAR -->
-    <div class="sidebar-col">
+    <div class="sidebar anim-up anim-up-d2">
 
-      <!-- Live Sale Summary -->
-      <div class="info-card">
-        <div class="info-card-header">
+      <!-- Live Summary -->
+      <div class="side-card">
+        <div class="side-card-head">
           <span>🧾</span>
           <h4>Sale Summary</h4>
         </div>
-        <div class="info-card-body">
-          <div class="sell-summary">
+        <div class="side-card-body">
+          <div class="summary-grid">
             <div class="summary-row">
-              <span>Product</span>
+              <span class="summary-key">Product</span>
               <span class="summary-val" id="sum-product">—</span>
             </div>
             <div class="summary-row">
-              <span>Qty to Sell</span>
+              <span class="summary-key">Qty to Sell</span>
               <span class="summary-val accent" id="sum-qty">1</span>
             </div>
             <div class="summary-row">
-              <span>Deduction</span>
+              <span class="summary-key">Method</span>
               <span class="summary-val">FIFO Order</span>
             </div>
             <div class="summary-row">
-              <span>Action</span>
-              <span class="summary-val" style="color:#f87171;">Irreversible</span>
+              <span class="summary-key">Reversible</span>
+              <span class="summary-val danger">No</span>
             </div>
           </div>
         </div>
       </div>
 
-      <!-- FIFO Explainer -->
-      <div class="info-card">
-        <div class="info-card-header">
+      <!-- FIFO explainer -->
+      <div class="side-card">
+        <div class="side-card-head">
           <span>⚡</span>
           <h4>How FIFO Works</h4>
         </div>
-        <div class="info-card-body">
+        <div class="side-card-body">
           <div class="fifo-steps">
             <div class="fifo-step">
-              <div class="fifo-step-num">1</div>
-              <div class="fifo-step-text">INVENTRACK finds the batch with the <strong>nearest expiry date</strong> first.</div>
+              <div class="fifo-num">1</div>
+              <div class="fifo-text">Finds the batch with the <strong>nearest expiry date</strong>.</div>
             </div>
             <div class="fifo-step">
-              <div class="fifo-step-num">2</div>
-              <div class="fifo-step-text">If that batch has enough stock, it deducts all from there.</div>
+              <div class="fifo-num">2</div>
+              <div class="fifo-text">Deducts full quantity from it if stock is sufficient.</div>
             </div>
             <div class="fifo-step">
-              <div class="fifo-step-num">3</div>
-              <div class="fifo-step-text">If not, it empties that batch and <strong>moves to the next</strong> earliest.</div>
+              <div class="fifo-num">3</div>
+              <div class="fifo-text">If not, empties that batch and <strong>moves to the next</strong>.</div>
             </div>
             <div class="fifo-step">
-              <div class="fifo-step-num">4</div>
-              <div class="fifo-step-text">This repeats until the <strong>full quantity</strong> is deducted.</div>
+              <div class="fifo-num">4</div>
+              <div class="fifo-text">Repeats until the <strong>full quantity</strong> is deducted.</div>
             </div>
           </div>
         </div>
       </div>
 
       <!-- Warning -->
-      <div class="info-card" style="border-color:#fecaca;">
-        <div class="info-card-header" style="background:#b91c1c;">
+      <div class="side-card warn-card">
+        <div class="side-card-head">
           <span>⚠️</span>
-          <h4>Important</h4>
+          <h4>Important Notice</h4>
         </div>
-        <div class="info-card-body">
-          <div class="warn-strip" style="background:transparent; border:none; padding:0;">
-            Sales are permanent and cannot be reversed. Double-check the product name and quantity before confirming. The product name must match exactly (case-insensitive — INVENTRACK will handle it).
-          </div>
+        <div class="side-card-body">
+          <p class="warn-text">
+            <strong>Sales cannot be reversed.</strong>
+            Double-check the product name and quantity. The product name must match your inventory exactly (INVENTRACK handles case).
+          </p>
         </div>
       </div>
 
@@ -490,18 +409,16 @@
 <script>
   function changeQty(delta) {
     const input = document.getElementById('quantity');
-    const val = Math.max(1, parseInt(input.value || 1) + delta);
-    input.value = val;
+    input.value = Math.max(1, parseInt(input.value || 1) + delta);
     updateSummary();
   }
 
   function updateSummary() {
     const product = document.getElementById('product_name').value || '—';
     const qty     = document.getElementById('quantity').value || '1';
-
-    document.getElementById('sum-product').textContent  = product;
-    document.getElementById('sum-qty').textContent      = qty;
-    document.getElementById('confirm-qty').textContent  = qty + ' unit(s)';
+    document.getElementById('sum-product').textContent     = product;
+    document.getElementById('sum-qty').textContent         = qty;
+    document.getElementById('confirm-qty').textContent     = qty + ' unit(s)';
     document.getElementById('confirm-product').textContent = product === '—' ? 'this product' : product;
   }
 
@@ -512,27 +429,24 @@
   }
 
   document.getElementById('sellForm').addEventListener('submit', function(e) {
-    const product  = document.getElementById('product_name').value.trim();
-    const qty      = document.getElementById('quantity').value;
-    const checked  = document.getElementById('confirmCheck').checked;
-    const formErr  = document.getElementById('formErr');
-    const confErr  = document.getElementById('confirmErr');
+    const product = document.getElementById('product_name').value.trim();
+    const qty     = document.getElementById('quantity').value;
+    const checked = document.getElementById('confirmCheck').checked;
 
     if (!product || !qty) {
       e.preventDefault();
-      formErr.classList.add('show');
+      document.getElementById('formErr').classList.add('show');
       window.scrollTo({ top: 0, behavior: 'smooth' });
       return;
     }
     if (!checked) {
       e.preventDefault();
-      confErr.classList.add('show');
+      document.getElementById('confirmErr').classList.add('show');
       return;
     }
 
-    formErr.classList.remove('show');
-    confErr.classList.remove('show');
-
+    document.getElementById('formErr').classList.remove('show');
+    document.getElementById('confirmErr').classList.remove('show');
     const btn = document.getElementById('submitBtn');
     btn.textContent = 'Processing…';
     btn.disabled = true;

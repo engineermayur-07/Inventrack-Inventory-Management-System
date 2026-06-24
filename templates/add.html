@@ -3,376 +3,335 @@
 
 {% block head %}
 <style>
+  /* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
+     ADD BATCH
+  ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */
+
   .form-page {
-    max-width: 1280px;
+    max-width: 1360px;
     margin: 0 auto;
-    padding: 2.5rem 2.5rem 4rem;
+    padding: 2rem 2rem 5rem;
   }
 
   /* ── PAGE HEADER ── */
-  .page-header {
+  .page-head {
     display: flex;
-    align-items: flex-start;
+    align-items: flex-end;
     justify-content: space-between;
     flex-wrap: wrap;
     gap: 1rem;
-    margin-bottom: 2.5rem;
-    animation: fadeUp .4s ease both;
+    margin-bottom: 2rem;
   }
   .breadcrumb {
-    font-size: 0.75rem;
-    color: var(--muted);
-    margin-bottom: 0.4rem;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.75rem; color: var(--muted);
+    margin-bottom: 0.35rem;
   }
-  .breadcrumb a {
-    color: var(--muted);
-    text-decoration: none;
-    transition: color .2s;
-  }
+  .breadcrumb a { color: var(--muted); text-decoration: none; transition: color 0.15s; }
   .breadcrumb a:hover { color: var(--accent); }
   .breadcrumb-sep { opacity: .4; }
+
   .page-title {
-    font-family: 'Syne', sans-serif;
-    font-size: clamp(1.6rem, 3vw, 2.1rem);
-    font-weight: 800;
-    color: var(--ink);
+    font-family: 'Fraunces', serif;
+    font-size: clamp(1.6rem, 3vw, 2.2rem);
+    font-weight: 900; color: var(--ink);
+    letter-spacing: -0.02em; line-height: 1.1;
   }
-  .page-title span { color: var(--accent); }
-  .page-sub {
-    color: var(--muted);
-    font-size: 0.88rem;
-    margin-top: 0.3rem;
+  .page-sub { font-size: 0.85rem; color: var(--muted); margin-top: 0.3rem; }
+
+  .btn-back {
+    display: inline-flex; align-items: center; gap: 0.4rem;
+    padding: 0.55rem 1.1rem;
+    border: 1.5px solid var(--border);
+    border-radius: 10px;
+    font-size: 0.82rem; font-weight: 600;
+    color: var(--muted); text-decoration: none;
+    background: var(--white);
+    transition: all 0.15s;
+    white-space: nowrap;
+    align-self: flex-end;
   }
+  .btn-back:hover { border-color: var(--ink); color: var(--ink); background: var(--ink); color: #fff; }
 
   /* ── LAYOUT ── */
   .form-layout {
     display: grid;
-    grid-template-columns: 1fr 340px;
-    gap: 1.5rem;
+    grid-template-columns: 1fr 300px;
+    gap: 1.25rem;
     align-items: start;
   }
 
   /* ── FORM CARD ── */
   .form-card {
-    background: var(--card);
+    background: var(--white);
     border: 1px solid var(--border);
     border-radius: 16px;
     overflow: hidden;
-    animation: fadeUp .5s ease both;
-    animation-delay: .1s;
   }
-  .form-card-header {
-    display: flex;
-    align-items: center;
-    gap: 0.6rem;
-    padding: 1.3rem 1.8rem;
+  .form-card-head {
+    display: flex; align-items: center; gap: 0.6rem;
+    padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--border);
     background: var(--surface);
   }
-  .form-card-dot {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: var(--accent);
-  }
-  .form-card-title {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.95rem;
-    font-weight: 700;
-    color: var(--ink);
-  }
-  .form-card-body {
-    padding: 2rem 1.8rem;
-  }
+  .form-card-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); }
+  .form-card-title { font-size: 0.9rem; font-weight: 700; color: var(--ink); }
+  .form-card-body { padding: 1.75rem 1.5rem; }
 
-  /* ── FORM FIELDS ── */
-  .field-group {
+  /* ── FIELDS ── */
+  .field { margin-bottom: 1.25rem; }
+  .field:last-of-type { margin-bottom: 0; }
+  .field-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: 1.2rem;
-    margin-bottom: 1.2rem;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
   }
-  .field { margin-bottom: 1.2rem; }
-  .field:last-child { margin-bottom: 0; }
 
   label {
     display: block;
-    font-size: 0.78rem;
-    font-weight: 700;
-    letter-spacing: 0.06em;
-    text-transform: uppercase;
-    color: var(--ink);
-    margin-bottom: 0.45rem;
+    font-size: 0.76rem; font-weight: 700;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: var(--ink); margin-bottom: 0.45rem;
   }
   .field-hint {
-    font-size: 0.72rem;
-    color: var(--muted);
-    margin-top: 0.35rem;
-    font-weight: 400;
-    text-transform: none;
-    letter-spacing: 0;
+    font-size: 0.72rem; color: var(--muted);
+    margin-top: 0.3rem;
+    font-weight: 400; text-transform: none; letter-spacing: 0;
+    line-height: 1.4;
   }
 
   .input-wrap { position: relative; }
   .input-icon {
-    position: absolute;
-    left: 0.9rem; top: 50%;
+    position: absolute; left: 0.875rem; top: 50%;
     transform: translateY(-50%);
-    font-size: 1rem;
+    width: 16px; height: 16px;
+    opacity: .35; pointer-events: none;
+  }
+  .input-badge {
+    position: absolute; right: 0.75rem; top: 50%;
+    transform: translateY(-50%);
+    font-size: 0.6rem; font-weight: 700;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(224,90,26,.08);
+    padding: 0.15rem 0.45rem; border-radius: 4px;
     pointer-events: none;
-    opacity: .45;
   }
 
   input[type="text"],
   input[type="number"],
-  input[type="date"],
-  select {
-    width: 100%;
-    padding: 0.75rem 0.9rem 0.75rem 2.6rem;
+  input[type="date"] {
+    width: 100%; height: 46px;
+    padding: 0 0.875rem 0 2.5rem;
     border: 1.5px solid var(--border);
     border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.92rem;
-    color: var(--ink);
-    background: var(--surface);
-    outline: none;
-    transition: border-color .2s, box-shadow .2s, background .2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.9rem; color: var(--ink);
+    background: var(--surface); outline: none;
+    transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
     appearance: none;
   }
-  input:focus, select:focus {
+  input:focus {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(212,80,10,.1);
+    box-shadow: 0 0 0 3px rgba(224,90,26,.1);
     background: #fff;
   }
-  input::placeholder { color: #b5b2ab; }
+  input::placeholder { color: #c4c2bc; }
 
-  /* uppercase auto-format badge */
-  .input-badge {
-    position: absolute;
-    right: 0.75rem; top: 50%;
-    transform: translateY(-50%);
-    font-size: 0.62rem;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    color: var(--accent);
-    background: rgba(212,80,10,.08);
-    padding: 0.15rem 0.45rem;
-    border-radius: 4px;
-    pointer-events: none;
+  /* Divider */
+  .field-divider {
+    display: flex; align-items: center; gap: 0.75rem;
+    margin: 1.25rem 0;
+    font-size: 0.7rem; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--muted2);
   }
+  .field-divider::before,
+  .field-divider::after { content: ''; flex: 1; height: 1px; background: var(--border); }
 
-  /* quantity stepper */
-  .qty-wrap {
-    display: flex;
-    align-items: center;
+  /* Quantity stepper */
+  .qty-stepper {
+    display: flex; align-items: center;
     border: 1.5px solid var(--border);
     border-radius: 10px;
     overflow: hidden;
     background: var(--surface);
-    transition: border-color .2s, box-shadow .2s;
+    transition: border-color 0.15s, box-shadow 0.15s;
+    height: 46px;
   }
-  .qty-wrap:focus-within {
+  .qty-stepper:focus-within {
     border-color: var(--accent);
-    box-shadow: 0 0 0 3px rgba(212,80,10,.1);
+    box-shadow: 0 0 0 3px rgba(224,90,26,.1);
     background: #fff;
   }
   .qty-btn {
-    width: 44px; height: 44px;
+    width: 46px; min-width: 46px;
+    height: 44px;
     border: none; background: none;
-    font-size: 1.1rem; cursor: pointer;
+    font-size: 1.2rem; cursor: pointer;
     color: var(--muted);
-    transition: background .15s, color .15s;
-    flex-shrink: 0;
     display: flex; align-items: center; justify-content: center;
+    transition: background 0.12s, color 0.12s;
+    flex-shrink: 0;
+    user-select: none;
   }
-  .qty-btn:hover { background: rgba(212,80,10,.08); color: var(--accent); }
+  .qty-btn:hover { background: rgba(224,90,26,.08); color: var(--accent); }
   .qty-input {
     flex: 1; border: none !important;
     box-shadow: none !important;
     background: transparent !important;
     text-align: center;
-    padding: 0.75rem 0 !important;
-    font-weight: 700;
-    font-size: 1rem !important;
+    height: 44px !important;
+    padding: 0 !important;
+    font-weight: 700; font-size: 1.05rem !important;
   }
 
-  /* form divider */
-  .form-divider {
-    display: flex; align-items: center; gap: 0.8rem;
-    margin: 1.5rem 0;
-    color: var(--muted); font-size: 0.72rem;
-    font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase;
+  /* Alert */
+  .form-alert {
+    display: none;
+    align-items: center; gap: 0.6rem;
+    padding: 0.8rem 1rem;
+    border-radius: 10px;
+    font-size: 0.85rem; font-weight: 500;
+    margin-bottom: 1.25rem;
   }
-  .form-divider::before,
-  .form-divider::after {
-    content: ''; flex: 1; height: 1px; background: var(--border);
-  }
+  .form-alert.show { display: flex; }
+  .alert-err { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; }
 
-  /* submit row */
+  /* Actions */
   .form-actions {
-    display: flex;
-    gap: 0.8rem;
-    align-items: center;
-    margin-top: 1.8rem;
+    display: flex; gap: 0.75rem; align-items: center;
+    margin-top: 1.75rem;
     padding-top: 1.5rem;
     border-top: 1px solid var(--border);
     flex-wrap: wrap;
   }
   .submit-btn {
-    flex: 1;
-    padding: 0.85rem 1.5rem;
-    background: var(--accent);
-    color: #fff;
+    flex: 1; height: 48px;
+    background: var(--accent); color: #fff;
     border: none; border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.95rem; font-weight: 600;
-    cursor: pointer;
-    transition: background .2s, transform .15s, box-shadow .2s;
+    font-family: 'Plus Jakarta Sans', sans-serif;
+    font-size: 0.95rem; font-weight: 700;
+    cursor: pointer; min-width: 120px;
     display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
   }
   .submit-btn:hover {
-    background: #b8420a;
+    background: var(--accent-h);
     transform: translateY(-1px);
-    box-shadow: 0 6px 20px rgba(212,80,10,.3);
+    box-shadow: 0 6px 20px rgba(224,90,26,.3);
   }
-  .cancel-btn {
-    padding: 0.85rem 1.4rem;
-    background: var(--surface);
-    color: var(--muted);
+  .cancel-link {
+    display: inline-flex; align-items: center;
+    height: 48px;
+    padding: 0 1.25rem;
     border: 1.5px solid var(--border);
     border-radius: 10px;
-    font-family: 'DM Sans', sans-serif;
-    font-size: 0.9rem; font-weight: 500;
-    text-decoration: none;
-    transition: all .2s;
-    white-space: nowrap;
+    font-size: 0.88rem; font-weight: 600;
+    color: var(--muted); text-decoration: none;
+    background: var(--white);
+    transition: all 0.15s; white-space: nowrap;
   }
-  .cancel-btn:hover {
-    background: var(--ink); color: #fff; border-color: var(--ink);
-  }
+  .cancel-link:hover { background: var(--ink); color: #fff; border-color: var(--ink); }
 
-  /* error / success flash */
-  .form-alert {
-    display: none;
-    padding: 0.8rem 1.1rem;
-    border-radius: 8px;
-    font-size: 0.85rem;
-    margin-bottom: 1.2rem;
-  }
-  .form-alert.show { display: flex; align-items: center; gap: 0.6rem; }
-  .form-alert-err  { background: #fef2f2; border: 1px solid #fecaca; color: #b91c1c; }
+  /* ── SIDEBAR ── */
+  .sidebar { display: flex; flex-direction: column; gap: 1rem; }
 
-  /* ── SIDEBAR CARDS ── */
-  .info-card {
-    background: var(--card);
+  .side-card {
+    background: var(--white);
     border: 1px solid var(--border);
     border-radius: 14px;
     overflow: hidden;
-    animation: fadeUp .55s ease both;
-    animation-delay: .2s;
-    margin-bottom: 1.2rem;
   }
-  .info-card:last-child { margin-bottom: 0; }
-  .info-card-header {
+  .side-card-head {
     background: var(--ink);
-    padding: 0.9rem 1.3rem;
-    display: flex; align-items: center; gap: 0.5rem;
+    padding: 0.8rem 1.2rem;
+    display: flex; align-items: center; gap: 0.6rem;
   }
-  .info-card-header h4 {
-    font-family: 'Syne', sans-serif;
-    font-size: 0.82rem; font-weight: 700; color: #fff;
-  }
-  .info-card-body { padding: 1.2rem 1.3rem; }
+  .side-card-head h4 { font-size: 0.82rem; font-weight: 700; color: #fff; }
+  .side-card-body { padding: 1.1rem 1.2rem; }
 
-  .tip-list { list-style: none; display: flex; flex-direction: column; gap: 0.8rem; }
-  .tip-list li {
-    display: flex; align-items: flex-start; gap: 0.6rem;
-    font-size: 0.82rem; color: var(--muted); line-height: 1.55;
+  /* Preview */
+  .preview-grid {
+    background: var(--ink);
+    border-radius: 10px;
+    padding: 1rem 1.1rem;
+    display: flex; flex-direction: column; gap: 0;
   }
-  .tip-list li::before {
-    content: '→';
-    color: var(--accent); font-weight: 700; flex-shrink: 0; margin-top: 1px;
+  .preview-row {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 0.45rem 0;
+    border-bottom: 1px solid rgba(255,255,255,.06);
+    font-size: 0.78rem;
   }
+  .preview-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .preview-key { color: rgba(255,255,255,.4); }
+  .preview-val { color: #fff; font-weight: 700; }
 
-  .field-ref { display: flex; flex-direction: column; gap: 0.7rem; }
+  /* Tips */
+  .tips { display: flex; flex-direction: column; gap: 0.7rem; }
+  .tip {
+    display: flex; align-items: flex-start; gap: 0.5rem;
+    font-size: 0.8rem; color: var(--muted); line-height: 1.55;
+  }
+  .tip-arrow { color: var(--accent); font-weight: 700; flex-shrink: 0; }
+
+  /* Field ref */
+  .field-ref { display: flex; flex-direction: column; }
   .ref-row {
     display: flex; justify-content: space-between; align-items: center;
     padding: 0.5rem 0;
     border-bottom: 1px solid var(--border);
     font-size: 0.8rem;
   }
-  .ref-row:last-child { border-bottom: none; padding-bottom: 0; }
+  .ref-row:last-child { border-bottom: none; }
   .ref-key { color: var(--muted); }
-  .ref-val { font-weight: 600; color: var(--ink); }
-
-  /* live preview */
-  .preview-card {
-    background: var(--ink);
-    border-radius: 12px;
-    padding: 1.2rem;
-    margin-top: 0.5rem;
-  }
-  .preview-row {
-    display: flex; justify-content: space-between;
-    font-size: 0.78rem; padding: 0.35rem 0;
-    border-bottom: 1px solid rgba(255,255,255,.07);
-    color: rgba(255,255,255,.5);
-  }
-  .preview-row:last-child { border-bottom: none; }
-  .preview-val { color: #fff; font-weight: 600; }
-
-  /* ── ANIMATIONS ── */
-  @keyframes fadeUp {
-    from { opacity: 0; transform: translateY(18px); }
-    to   { opacity: 1; transform: translateY(0); }
-  }
+  .ref-val { font-weight: 700; font-size: 0.75rem; color: var(--ink); }
 
   /* ── RESPONSIVE ── */
   @media (max-width: 960px) {
     .form-layout { grid-template-columns: 1fr; }
-    .sidebar-col { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
-    .info-card { margin-bottom: 0; }
+    .sidebar { display: grid; grid-template-columns: 1fr 1fr; }
   }
-  @media (max-width: 600px) {
-    .form-page { padding: 1.5rem 1.2rem 3rem; }
-    .field-group { grid-template-columns: 1fr; }
-    .sidebar-col { grid-template-columns: 1fr; }
-    .form-card-body { padding: 1.4rem 1.2rem; }
+  @media (max-width: 768px) {
+    .form-page { padding: 1.25rem 1.25rem 4rem; }
+    .field-row { grid-template-columns: 1fr; }
+    .sidebar { grid-template-columns: 1fr; }
+    .form-card-body { padding: 1.25rem; }
   }
 </style>
 {% endblock %}
 
 {% block content %}
-<div class="form-page">
+<div class="form-page anim-up">
 
-  <!-- PAGE HEADER -->
-  <div class="page-header">
+  <!-- HEADER -->
+  <div class="page-head">
     <div>
       <div class="breadcrumb">
         <a href="/">Dashboard</a>
         <span class="breadcrumb-sep">›</span>
         <span>Add Batch</span>
       </div>
-      <h1 class="page-title">Add New <span>Batch</span></h1>
+      <h1 class="page-title">Add New Batch</h1>
       <p class="page-sub">Register a product batch with its quantity and expiry date.</p>
     </div>
-    <a href="/" class="cancel-btn" style="align-self:flex-end;">← Back to Dashboard</a>
+    <a href="/" class="btn-back">← Back</a>
   </div>
 
   <div class="form-layout">
 
     <!-- FORM -->
-    <div class="form-card">
-      <div class="form-card-header">
+    <div class="form-card anim-up anim-up-d1">
+      <div class="form-card-head">
         <div class="form-card-dot"></div>
         <span class="form-card-title">Batch Details</span>
       </div>
       <div class="form-card-body">
 
-        <div class="form-alert form-alert-err" id="formErr">
-          ⚠ Please fill in all required fields.
+        <div class="form-alert alert-err" id="formErr">
+          <span>✕</span> Please fill in all required fields before saving.
         </div>
 
         <form action="/add_batch" method="POST" id="addForm" novalidate>
@@ -381,71 +340,68 @@
           <div class="field">
             <label for="product_name">Product Name <span style="color:var(--accent)">*</span></label>
             <div class="input-wrap">
-              <span class="input-icon">📦</span>
-              <input
-                type="text" id="product_name" name="product_name"
+              <svg class="input-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 8h6M5 5h4M5 11h3"/>
+              </svg>
+              <input type="text" id="product_name" name="product_name"
                 placeholder="e.g. PARACETAMOL"
                 required autocomplete="off"
-                oninput="this.value=this.value.toUpperCase(); updatePreview()"
-              />
-              <span class="input-badge">AUTO CAPS</span>
+                oninput="this.value=this.value.toUpperCase(); updatePreview()"/>
+              <span class="input-badge">Auto Caps</span>
             </div>
-            <div class="field-hint">Product name will be stored in UPPERCASE automatically.</div>
+            <div class="field-hint">Stored in UPPERCASE automatically for consistency.</div>
           </div>
 
-          <div class="field-group">
-            <!-- Batch Number -->
+          <!-- Batch No + Expiry -->
+          <div class="field-row">
             <div class="field" style="margin-bottom:0">
               <label for="batch_no">Batch Number <span style="color:var(--accent)">*</span></label>
               <div class="input-wrap">
-                <span class="input-icon">🏷️</span>
-                <input
-                  type="text" id="batch_no" name="batch_no"
+                <svg class="input-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <path d="M2 4h12M2 8h8M2 12h5"/><rect x="10" y="9" width="5" height="5" rx="1"/>
+                </svg>
+                <input type="text" id="batch_no" name="batch_no"
                   placeholder="e.g. B-2041"
                   required autocomplete="off"
-                  oninput="updatePreview()"
-                />
+                  oninput="updatePreview()"/>
               </div>
-              <div class="field-hint">Unique batch identifier.</div>
+              <div class="field-hint">Unique identifier for this batch.</div>
             </div>
 
-            <!-- Expiry Date -->
             <div class="field" style="margin-bottom:0">
               <label for="expiry_date">Expiry Date <span style="color:var(--accent)">*</span></label>
               <div class="input-wrap">
-                <span class="input-icon">📅</span>
-                <input
-                  type="date" id="expiry_date" name="expiry_date"
-                  required
-                  oninput="updatePreview()"
-                />
+                <svg class="input-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                  <rect x="2" y="2" width="12" height="12" rx="2"/><path d="M5 1v2M11 1v2M2 6h12"/>
+                </svg>
+                <input type="date" id="expiry_date" name="expiry_date"
+                  required oninput="updatePreview()"
+                  style="padding-left:2.5rem"/>
               </div>
               <div class="field-hint">Must be a future date.</div>
             </div>
           </div>
 
-          <div class="form-divider">Quantity</div>
+          <div class="field-divider">Quantity</div>
 
           <!-- Quantity -->
           <div class="field">
             <label for="quantity">Number of Units <span style="color:var(--accent)">*</span></label>
-            <div class="qty-wrap">
-              <button type="button" class="qty-btn" onclick="changeQty(-1)">−</button>
-              <input
-                type="number" id="quantity" name="quantity"
+            <div class="qty-stepper">
+              <button type="button" class="qty-btn" onclick="changeQty(-1)" tabindex="-1">−</button>
+              <input type="number" id="quantity" name="quantity"
                 class="qty-input" value="1" min="1" required
-                oninput="updatePreview()"
-              />
-              <button type="button" class="qty-btn" onclick="changeQty(1)">＋</button>
+                oninput="updatePreview()"/>
+              <button type="button" class="qty-btn" onclick="changeQty(1)" tabindex="-1">＋</button>
             </div>
-            <div class="field-hint">Total units in this batch.</div>
+            <div class="field-hint">Total units included in this batch.</div>
           </div>
 
           <!-- Actions -->
           <div class="form-actions">
-            <a href="/" class="cancel-btn">Cancel</a>
+            <a href="/" class="cancel-link">Cancel</a>
             <button type="submit" class="submit-btn" id="submitBtn">
-              <span>＋</span> Add Batch
+              ＋ Add Batch
             </button>
           </div>
 
@@ -454,30 +410,30 @@
     </div>
 
     <!-- SIDEBAR -->
-    <div class="sidebar-col">
+    <div class="sidebar anim-up anim-up-d2">
 
-      <!-- Live Preview -->
-      <div class="info-card">
-        <div class="info-card-header">
+      <!-- Preview -->
+      <div class="side-card">
+        <div class="side-card-head">
           <span>👁</span>
           <h4>Live Preview</h4>
         </div>
-        <div class="info-card-body">
-          <div class="preview-card">
+        <div class="side-card-body">
+          <div class="preview-grid">
             <div class="preview-row">
-              <span>Product</span>
+              <span class="preview-key">Product</span>
               <span class="preview-val" id="prev-product">—</span>
             </div>
             <div class="preview-row">
-              <span>Batch No.</span>
+              <span class="preview-key">Batch No.</span>
               <span class="preview-val" id="prev-batch">—</span>
             </div>
             <div class="preview-row">
-              <span>Quantity</span>
-              <span class="preview-val" id="prev-qty">1 units</span>
+              <span class="preview-key">Units</span>
+              <span class="preview-val" id="prev-qty">1</span>
             </div>
             <div class="preview-row">
-              <span>Expiry</span>
+              <span class="preview-key">Expiry</span>
               <span class="preview-val" id="prev-expiry">—</span>
             </div>
           </div>
@@ -485,45 +441,33 @@
       </div>
 
       <!-- Tips -->
-      <div class="info-card">
-        <div class="info-card-header">
+      <div class="side-card">
+        <div class="side-card-head">
           <span>💡</span>
-          <h4>Tips</h4>
+          <h4>Helpful Tips</h4>
         </div>
-        <div class="info-card-body">
-          <ul class="tip-list">
-            <li>Product names are auto-converted to uppercase for consistency.</li>
-            <li>Use a unique batch number per delivery or lot.</li>
-            <li>INVENTRACK sells the earliest-expiring batch first (FIFO).</li>
-            <li>You'll get alerts 30 days before any batch expires.</li>
-          </ul>
+        <div class="side-card-body">
+          <div class="tips">
+            <div class="tip"><span class="tip-arrow">→</span> Product names auto-convert to uppercase for consistency.</div>
+            <div class="tip"><span class="tip-arrow">→</span> Use a unique batch number per delivery or lot.</div>
+            <div class="tip"><span class="tip-arrow">→</span> INVENTRACK uses FIFO — earliest-expiring batch is sold first.</div>
+            <div class="tip"><span class="tip-arrow">→</span> You'll see expiry alerts 30 days in advance.</div>
+          </div>
         </div>
       </div>
 
       <!-- Field Reference -->
-      <div class="info-card">
-        <div class="info-card-header">
+      <div class="side-card">
+        <div class="side-card-head">
           <span>📋</span>
           <h4>Field Reference</h4>
         </div>
-        <div class="info-card-body">
+        <div class="side-card-body">
           <div class="field-ref">
-            <div class="ref-row">
-              <span class="ref-key">Product Name</span>
-              <span class="ref-val">Required</span>
-            </div>
-            <div class="ref-row">
-              <span class="ref-key">Batch Number</span>
-              <span class="ref-val">Required · Unique</span>
-            </div>
-            <div class="ref-row">
-              <span class="ref-key">Quantity</span>
-              <span class="ref-val">Min. 1 unit</span>
-            </div>
-            <div class="ref-row">
-              <span class="ref-key">Expiry Date</span>
-              <span class="ref-val">Future date</span>
-            </div>
+            <div class="ref-row"><span class="ref-key">Product Name</span><span class="ref-val">Required</span></div>
+            <div class="ref-row"><span class="ref-key">Batch Number</span><span class="ref-val">Required · Unique</span></div>
+            <div class="ref-row"><span class="ref-key">Quantity</span><span class="ref-val">Min. 1 unit</span></div>
+            <div class="ref-row"><span class="ref-key">Expiry Date</span><span class="ref-val">Future date only</span></div>
           </div>
         </div>
       </div>
@@ -533,40 +477,34 @@
 </div>
 
 <script>
-  // set min date to today
+  // Set min date
   document.getElementById('expiry_date').min = new Date().toISOString().split('T')[0];
 
   function changeQty(delta) {
     const input = document.getElementById('quantity');
-    const val = Math.max(1, parseInt(input.value || 1) + delta);
-    input.value = val;
+    input.value = Math.max(1, parseInt(input.value || 1) + delta);
     updatePreview();
   }
 
   function updatePreview() {
-    const p = document.getElementById('product_name').value || '—';
-    const b = document.getElementById('batch_no').value || '—';
-    const q = document.getElementById('quantity').value || '1';
-    const e = document.getElementById('expiry_date').value;
-
-    document.getElementById('prev-product').textContent = p;
-    document.getElementById('prev-batch').textContent   = b;
-    document.getElementById('prev-qty').textContent     = q + ' units';
-    document.getElementById('prev-expiry').textContent  = e || '—';
+    document.getElementById('prev-product').textContent = document.getElementById('product_name').value || '—';
+    document.getElementById('prev-batch').textContent   = document.getElementById('batch_no').value || '—';
+    document.getElementById('prev-qty').textContent     = document.getElementById('quantity').value || '1';
+    document.getElementById('prev-expiry').textContent  = document.getElementById('expiry_date').value || '—';
   }
 
   document.getElementById('addForm').addEventListener('submit', function(e) {
-    const fields = ['product_name','batch_no','quantity','expiry_date'];
+    const fields  = ['product_name','batch_no','quantity','expiry_date'];
     const missing = fields.some(id => !document.getElementById(id).value.trim());
-    const err = document.getElementById('formErr');
     if (missing) {
       e.preventDefault();
-      err.classList.add('show');
+      document.getElementById('formErr').classList.add('show');
       window.scrollTo({ top: 0, behavior: 'smooth' });
     } else {
-      err.classList.remove('show');
-      document.getElementById('submitBtn').textContent = 'Adding…';
-      document.getElementById('submitBtn').disabled = true;
+      document.getElementById('formErr').classList.remove('show');
+      const btn = document.getElementById('submitBtn');
+      btn.textContent = 'Saving…';
+      btn.disabled = true;
     }
   });
 </script>

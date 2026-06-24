@@ -3,390 +3,526 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Login – INVENTRACK</title>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+  <title>Sign In – INVENTRACK</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:opsz,wght@9..144,700;9..144,900&display=swap" rel="stylesheet"/>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --ink: #0a0f1e;
-      --surface: #f4f2ed;
-      --accent: #d4500a;
-      --accent2: #1a3a6e;
-      --muted: #7a7a72;
-      --card: #ffffff;
-      --border: #e0ddd6;
-      --err: #c0392b;
+      --ink:      #080d1a;
+      --surface:  #f7f6f3;
+      --surface2: #eeecea;
+      --white:    #ffffff;
+      --accent:   #e05a1a;
+      --accent-h: #c44c12;
+      --accent-l: rgba(224,90,26,.12);
+      --muted:    #6b7280;
+      --border:   #e2e0db;
+      --card:     #ffffff;
+      --err:      #b91c1c;
     }
 
+    html { font-size: 16px; }
     body {
-      font-family: 'DM Sans', sans-serif;
-      background: var(--surface);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background: var(--ink);
       color: var(--ink);
       min-height: 100vh;
-      display: grid;
-      grid-template-rows: 1fr auto;
+      display: flex;
+      flex-direction: column;
+      -webkit-font-smoothing: antialiased;
     }
 
-    /* ── LAYOUT ── */
+    /* ━━━━━ LAYOUT ━━━━━ */
     .page {
+      flex: 1;
       display: grid;
       grid-template-columns: 1fr 1fr;
-      min-height: calc(100vh - 70px);
+      min-height: 100vh;
     }
 
-    /* ── LEFT PANEL ── */
-    .left-panel {
+    /* ━━━━━ LEFT PANEL ━━━━━ */
+    .left {
       background: var(--ink);
-      display: flex; flex-direction: column;
-      justify-content: space-between;
-      padding: 3rem;
+      display: flex;
+      flex-direction: column;
+      padding: 2.5rem 3rem;
       position: relative;
       overflow: hidden;
     }
 
-    .left-panel::before {
+    /* Geometric background */
+    .left::before {
       content: '';
-      position: absolute; inset: 0;
-      background:
-        radial-gradient(ellipse at 20% 20%, rgba(212,80,10,.25) 0%, transparent 60%),
-        radial-gradient(ellipse at 80% 80%, rgba(26,58,110,.35) 0%, transparent 60%);
+      position: absolute;
+      width: 600px; height: 600px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(224,90,26,.18) 0%, transparent 70%);
+      top: -150px; left: -150px;
+      pointer-events: none;
+    }
+    .left::after {
+      content: '';
+      position: absolute;
+      width: 400px; height: 400px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(27,63,126,.25) 0%, transparent 70%);
+      bottom: -100px; right: -100px;
       pointer-events: none;
     }
 
-    /* grid pattern */
-    .left-panel::after {
-      content: '';
-      position: absolute; inset: 0;
+    /* Grid texture */
+    .left-grid {
+      position: absolute;
+      inset: 0;
       background-image:
-        linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
-      background-size: 40px 40px;
+        linear-gradient(rgba(255,255,255,.025) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(255,255,255,.025) 1px, transparent 1px);
+      background-size: 48px 48px;
       pointer-events: none;
     }
 
-    .panel-top { position: relative; z-index: 1; }
+    .left-content { position: relative; z-index: 2; display: flex; flex-direction: column; height: 100%; }
 
-    .logo {
-      font-family: 'Syne', sans-serif;
-      font-weight: 800; font-size: 1.5rem;
-      letter-spacing: 0.08em; color: #fff;
-      text-decoration: none; display: inline-block;
-      margin-bottom: 3rem;
+    /* Logo */
+    .left-logo {
+      display: flex; align-items: center; gap: 0.6rem;
+      text-decoration: none; margin-bottom: auto;
+      padding-bottom: 2rem;
     }
-    .logo span { color: var(--accent); }
+    .left-logo-icon {
+      width: 36px; height: 36px;
+      background: var(--accent);
+      border-radius: 9px;
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; color: #fff; font-weight: 800;
+    }
+    .left-logo-text {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-weight: 800; font-size: 1.1rem;
+      letter-spacing: 0.04em; color: #fff;
+    }
+    .left-logo-text em { font-style: normal; color: var(--accent); }
 
-    .panel-headline {
-      font-family: 'Syne', sans-serif;
-      font-size: clamp(1.8rem, 3vw, 2.6rem);
-      font-weight: 800; color: #fff;
-      line-height: 1.12; margin-bottom: 1rem;
+    /* Headline */
+    .left-headline {
+      font-family: 'Fraunces', serif;
+      font-size: clamp(2rem, 3.5vw, 3rem);
+      font-weight: 900;
+      color: #fff;
+      line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 1.25rem;
     }
-    .panel-headline em { font-style: normal; color: var(--accent); }
+    .left-headline em { font-style: italic; color: var(--accent); }
 
-    .panel-sub {
-      font-size: 0.95rem; color: rgba(255,255,255,.55);
-      line-height: 1.7; max-width: 340px;
+    .left-sub {
+      font-size: 0.95rem;
+      color: rgba(255,255,255,.5);
+      line-height: 1.7;
+      max-width: 360px;
+      margin-bottom: 2.5rem;
     }
 
-    /* feature list */
-    .panel-features {
-      list-style: none; position: relative; z-index: 1;
-      display: flex; flex-direction: column; gap: 1rem;
+    /* Feature pills */
+    .left-features {
+      display: flex; flex-direction: column; gap: 0.75rem;
+      margin-top: auto; padding-top: 2rem;
     }
-    .panel-features li {
+    .feature-pill {
       display: flex; align-items: center; gap: 0.75rem;
-      color: rgba(255,255,255,.6); font-size: 0.88rem;
+      padding: 0.75rem 1rem;
+      background: rgba(255,255,255,.05);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 10px;
     }
-    .panel-features li::before {
-      content: '✓'; width: 22px; height: 22px;
-      background: rgba(212,80,10,.25); color: var(--accent);
-      border-radius: 50%; display: flex; align-items: center;
-      justify-content: center; font-size: 0.7rem; font-weight: 700;
-      flex-shrink: 0;
+    .feature-pill-icon {
+      width: 32px; height: 32px; border-radius: 8px;
+      background: rgba(224,90,26,.2);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 0.9rem; flex-shrink: 0;
     }
+    .feature-pill-text { font-size: 0.83rem; color: rgba(255,255,255,.7); font-weight: 500; }
 
-    /* ── RIGHT PANEL (FORM) ── */
-    .right-panel {
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: center;
+    /* Floating stat card */
+    .stat-card-float {
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.1);
+      border-radius: 14px;
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1.5rem;
+      backdrop-filter: blur(10px);
+    }
+    .stat-row { display: flex; gap: 2rem; }
+    .stat-item { flex: 1; }
+    .stat-num {
+      font-family: 'Fraunces', serif;
+      font-size: 1.7rem; font-weight: 900;
+      color: #fff; line-height: 1;
+    }
+    .stat-num em { font-style: normal; color: var(--accent); }
+    .stat-lbl { font-size: 0.72rem; color: rgba(255,255,255,.4); margin-top: 0.25rem; }
+
+    /* ━━━━━ RIGHT PANEL ━━━━━ */
+    .right {
+      background: var(--surface);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
       padding: 3rem 2rem;
+      position: relative;
     }
 
+    .form-wrap {
+      width: 100%;
+      max-width: 400px;
+    }
+
+    /* Header */
+    .form-header { margin-bottom: 2rem; }
+    .form-eyebrow {
+      display: inline-flex; align-items: center; gap: 0.4rem;
+      padding: 0.3rem 0.75rem;
+      background: var(--accent-l);
+      border-radius: 100px;
+      font-size: 0.72rem; font-weight: 700;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 0.9rem;
+    }
+    .form-title {
+      font-family: 'Fraunces', serif;
+      font-size: 2rem; font-weight: 900;
+      color: var(--ink); line-height: 1.1;
+      letter-spacing: -0.02em;
+      margin-bottom: 0.4rem;
+    }
+    .form-sub { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+
+    /* Card */
     .form-card {
       background: var(--card);
       border-radius: 16px;
       border: 1px solid var(--border);
-      padding: 2.8rem;
-      width: 100%; max-width: 420px;
-      box-shadow: 0 20px 60px rgba(10,15,30,.08);
-      animation: fadeUp .5s ease both;
+      padding: 2rem;
+      box-shadow: 0 4px 24px rgba(8,13,26,.07), 0 1px 4px rgba(8,13,26,.05);
+      animation: slideUp 0.5s cubic-bezier(0.22,1,0.36,1) both;
     }
 
-    .form-top {
-      margin-bottom: 2rem;
+    /* Fields */
+    .field { margin-bottom: 1.1rem; }
+    .field-label {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 0.4rem;
     }
-    .form-eyebrow {
-      font-size: 0.72rem; font-weight: 600;
-      letter-spacing: 0.14em; text-transform: uppercase;
-      color: var(--accent); margin-bottom: 0.5rem;
-    }
-    .form-title {
-      font-family: 'Syne', sans-serif;
-      font-size: 1.7rem; font-weight: 800;
-    }
-    .form-sub { color: var(--muted); font-size: 0.88rem; margin-top: 0.3rem; }
-
-    /* FORM FIELDS */
-    .field { margin-bottom: 1.3rem; }
     label {
-      display: block; font-size: 0.8rem;
-      font-weight: 600; margin-bottom: 0.4rem;
-      color: var(--ink);
+      font-size: 0.8rem; font-weight: 700;
+      color: var(--ink); letter-spacing: 0.01em;
     }
 
-    .input-wrap {
-      position: relative;
-    }
+    .input-wrap { position: relative; }
     .input-icon {
-      position: absolute; left: 0.9rem; top: 50%;
-      transform: translateY(-50%); font-size: 1rem;
-      pointer-events: none; opacity: .4;
+      position: absolute; left: 0.875rem; top: 50%;
+      transform: translateY(-50%);
+      width: 16px; height: 16px;
+      opacity: .35; pointer-events: none;
     }
 
     input[type="email"],
     input[type="password"],
     input[type="text"] {
       width: 100%;
-      padding: 0.75rem 0.9rem 0.75rem 2.5rem;
+      height: 46px;
+      padding: 0 0.875rem 0 2.5rem;
       border: 1.5px solid var(--border);
-      border-radius: 8px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 0.92rem; color: var(--ink);
+      border-radius: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.9rem; color: var(--ink);
       background: var(--surface);
       outline: none;
-      transition: border-color .2s, box-shadow .2s;
+      transition: border-color 0.15s, box-shadow 0.15s, background 0.15s;
     }
     input:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 3px rgba(212,80,10,.12);
+      box-shadow: 0 0 0 3px rgba(224,90,26,.1);
       background: #fff;
     }
-    input::placeholder { color: #b0ada6; }
+    input::placeholder { color: #c4c2bc; }
+    input.has-error { border-color: var(--err); }
 
     /* password toggle */
     .pw-toggle {
-      position: absolute; right: 0.9rem; top: 50%;
+      position: absolute; right: 0.875rem; top: 50%;
       transform: translateY(-50%);
       background: none; border: none; cursor: pointer;
-      font-size: 0.85rem; color: var(--muted); padding: 0;
+      font-size: 0.75rem; font-weight: 600;
+      color: var(--muted); padding: 0.25rem 0.5rem;
+      border-radius: 4px;
+      transition: color 0.15s, background 0.15s;
     }
-    .pw-toggle:hover { color: var(--ink); }
+    .pw-toggle:hover { background: var(--surface2); color: var(--ink); }
 
-    /* error msg */
-    .err-msg {
-      display: none; margin-top: 1rem; padding: 0.75rem 1rem;
+    /* Error banner */
+    .err-banner {
+      display: none;
+      align-items: center; gap: 0.6rem;
+      padding: 0.75rem 0.875rem;
       background: #fef2f2; border: 1px solid #fecaca;
-      border-radius: 8px; color: var(--err);
-      font-size: 0.85rem;
+      border-radius: 10px; color: var(--err);
+      font-size: 0.82rem; font-weight: 500;
+      margin-bottom: 1rem;
     }
-    .err-msg.show { display: block; }
+    .err-banner.show { display: flex; }
 
-    /* submit */
+    /* Submit */
     .submit-btn {
-      width: 100%; padding: 0.85rem;
+      width: 100%; height: 48px;
       background: var(--accent); color: #fff;
-      border: none; border-radius: 8px;
-      font-family: 'DM Sans', sans-serif;
-      font-size: 1rem; font-weight: 600;
-      cursor: pointer; margin-top: 0.5rem;
-      transition: background .2s, transform .15s, box-shadow .2s;
+      border: none; border-radius: 10px;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      font-size: 0.95rem; font-weight: 700;
+      cursor: pointer; margin-top: 1.25rem;
       display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+      transition: background 0.15s, transform 0.12s, box-shadow 0.15s;
     }
     .submit-btn:hover {
-      background: #b8420a; transform: translateY(-1px);
-      box-shadow: 0 6px 20px rgba(212,80,10,.3);
+      background: var(--accent-h);
+      transform: translateY(-1px);
+      box-shadow: 0 6px 20px rgba(224,90,26,.3);
     }
-    .submit-btn:active { transform: translateY(0); }
+    .submit-btn:active { transform: translateY(0); box-shadow: none; }
 
-    /* loading state */
-    .submit-btn.loading { pointer-events: none; opacity: .8; }
+    /* Loading */
+    .submit-btn.loading { pointer-events: none; opacity: .85; }
     .spinner {
       width: 16px; height: 16px;
-      border: 2px solid rgba(255,255,255,.4);
+      border: 2px solid rgba(255,255,255,.35);
       border-top-color: #fff;
       border-radius: 50%;
-      animation: spin .7s linear infinite;
+      animation: spin 0.65s linear infinite;
       display: none;
     }
     .submit-btn.loading .spinner { display: block; }
     .submit-btn.loading .btn-text { display: none; }
 
-    .divider {
-      text-align: center; font-size: 0.78rem;
-      color: var(--muted); margin: 1.2rem 0;
-      display: flex; align-items: center; gap: 0.8rem;
+    /* Divider + Back */
+    .form-footer {
+      display: flex; align-items: center; justify-content: center;
+      gap: 0.5rem; margin-top: 1.5rem;
+      font-size: 0.82rem; color: var(--muted);
     }
-    .divider::before, .divider::after {
-      content: ''; flex: 1; height: 1px; background: var(--border);
+    .form-footer a { color: var(--accent); font-weight: 600; text-decoration: none; }
+    .form-footer a:hover { text-decoration: underline; }
+
+    /* Server error */
+    .server-err {
+      display: flex; align-items: center; gap: 0.6rem;
+      padding: 0.75rem 0.875rem;
+      background: #fef2f2; border: 1px solid #fecaca;
+      border-radius: 10px; color: var(--err);
+      font-size: 0.82rem; font-weight: 500;
+      margin-bottom: 1rem;
     }
 
-    .back-link {
-      display: block; text-align: center;
-      font-size: 0.85rem; color: var(--muted);
-      text-decoration: none; transition: color .2s;
-    }
-    .back-link:hover { color: var(--ink); }
-    .back-link span { color: var(--accent); font-weight: 500; }
-
-    /* ── FOOTER ── */
+    /* ━━━━━ FOOTER ━━━━━ */
     footer {
-      background: #070b16;
-      color: rgba(255,255,255,.5);
-      padding: 1.2rem 2.5rem;
-      display: flex; justify-content: space-between;
-      align-items: center; flex-wrap: wrap; gap: 0.5rem;
+      background: var(--ink);
+      padding: 1.25rem 2rem;
+      display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 0.5rem;
       border-top: 1px solid rgba(255,255,255,.06);
     }
-    footer p { font-size: 0.78rem; }
+    footer p { font-size: 0.78rem; color: rgba(255,255,255,.4); }
     footer a { color: var(--accent); text-decoration: none; }
 
-    /* ── ANIMATIONS ── */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
+    /* ━━━━━ ANIMATIONS ━━━━━ */
+    @keyframes slideUp {
+      from { opacity: 0; transform: translateY(24px); }
       to   { opacity: 1; transform: translateY(0); }
     }
-    @keyframes spin {
-      to { transform: rotate(360deg); }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ━━━━━ MOBILE ━━━━━ */
+    @media (max-width: 768px) {
+      .page { grid-template-columns: 1fr; }
+      .left {
+        padding: 2rem 1.5rem;
+        min-height: auto;
+      }
+      .left-headline { font-size: 1.8rem; }
+      .left-features { display: none; }
+      .stat-card-float { display: none; }
+      .left-sub { display: none; }
+      .left-logo { margin-bottom: 1.5rem; padding-bottom: 0; }
+      .left::before, .left::after { display: none; }
+      .left-content { gap: 0; }
+      .right { padding: 2rem 1.25rem; justify-content: flex-start; }
+      .form-card { padding: 1.5rem; }
+      footer { padding: 1rem 1.25rem; }
     }
 
-    /* ── MOBILE ── */
-    @media (max-width: 768px) {
-      .page { grid-template-columns: 1fr; min-height: auto; }
-      .left-panel {
-        padding: 2rem 1.5rem;
-        gap: 2rem;
-      }
-      .panel-headline { font-size: 1.8rem; }
-      .right-panel { padding: 2.5rem 1.2rem; }
-      .form-card { padding: 2rem 1.4rem; }
-      footer { padding: 1rem 1.2rem; }
+    @media (max-width: 400px) {
+      .form-card { padding: 1.25rem; }
     }
   </style>
 </head>
 <body>
 
 <main class="page">
-  <!-- LEFT PANEL -->
-  <div class="left-panel">
-    <div class="panel-top">
-      <a href="/" class="logo">INVEN<span>TRACK</span></a>
-      <h2 class="panel-headline">
-        Your Inventory.<br/>Under <em>Control.</em>
-      </h2>
-      <p class="panel-sub">
-        Batch tracking, expiry alerts, and FIFO selling — all in one place. Built for businesses that can't afford errors.
-      </p>
-    </div>
+  <!-- LEFT -->
+  <div class="left">
+    <div class="left-grid"></div>
+    <div class="left-content">
+      <a href="/" class="left-logo">
+        <div class="left-logo-icon">IT</div>
+        <span class="left-logo-text">INVEN<em>TRACK</em></span>
+      </a>
 
-    <ul class="panel-features">
-      <li>Batch-level inventory tracking</li>
-      <li>30-day expiry alert system</li>
-      <li>Automatic FIFO sell-through</li>
-      <li>Secure, personal dashboard</li>
-      <li>Works on mobile &amp; desktop</li>
-    </ul>
-  </div>
-
-  <!-- RIGHT PANEL -->
-  <div class="right-panel">
-    <div class="form-card">
-      <div class="form-top">
-        <div class="form-eyebrow">Welcome Back</div>
-        <h1 class="form-title">Sign In</h1>
-        <p class="form-sub">Access your inventory dashboard</p>
+      <div>
+        <h2 class="left-headline">Your Inventory,<br/><em>Under Control.</em></h2>
+        <p class="left-sub">Batch tracking, expiry alerts, and FIFO selling — built for businesses that demand accuracy.</p>
       </div>
 
-      <!-- Flask will POST to /login -->
-      <form action="/login" method="POST" id="loginForm" novalidate>
-
-        <div class="field">
-          <label for="email">Email Address</label>
-          <div class="input-wrap">
-            <span class="input-icon">✉</span>
-            <input
-              type="email" id="email" name="email"
-              placeholder="you@example.com"
-              autocomplete="email" required
-            />
+      <div class="stat-card-float">
+        <div class="stat-row">
+          <div class="stat-item">
+            <div class="stat-num">10<em>K+</em></div>
+            <div class="stat-lbl">Batches tracked</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num">30<em>d</em></div>
+            <div class="stat-lbl">Advance expiry alerts</div>
+          </div>
+          <div class="stat-item">
+            <div class="stat-num"><em>FIFO</em></div>
+            <div class="stat-lbl">Smart sell logic</div>
           </div>
         </div>
+      </div>
 
-        <div class="field">
-          <label for="password">Password</label>
-          <div class="input-wrap">
-            <span class="input-icon">🔒</span>
-            <input
-              type="password" id="password" name="password"
-              placeholder="Enter your password"
-              autocomplete="current-password" required
-            />
-            <button type="button" class="pw-toggle" onclick="togglePw()" id="pwToggle">Show</button>
-          </div>
+      <div class="left-features">
+        <div class="feature-pill">
+          <div class="feature-pill-icon">📦</div>
+          <span class="feature-pill-text">Batch-level inventory tracking</span>
         </div>
+        <div class="feature-pill">
+          <div class="feature-pill-icon">⏰</div>
+          <span class="feature-pill-text">30-day expiry alert system</span>
+        </div>
+        <div class="feature-pill">
+          <div class="feature-pill-icon">⚡</div>
+          <span class="feature-pill-text">Automatic FIFO sell-through</span>
+        </div>
+        <div class="feature-pill">
+          <div class="feature-pill-icon">🔐</div>
+          <span class="feature-pill-text">Isolated, secure dashboard</span>
+        </div>
+      </div>
+    </div>
+  </div>
 
-        <!-- server-side error injection: use {{ error }} in Flask template -->
+  <!-- RIGHT -->
+  <div class="right">
+    <div class="form-wrap">
+      <div class="form-header">
+        <div class="form-eyebrow">Welcome back</div>
+        <h1 class="form-title">Sign in to<br/>your account</h1>
+        <p class="form-sub">Access your inventory dashboard and manage your stock.</p>
+      </div>
+
+      <div class="form-card">
         {% if error %}
-        <div class="err-msg show">{{ error }}</div>
+        <div class="server-err">
+          <span>✕</span> {{ error }}
+        </div>
         {% endif %}
-        <div class="err-msg" id="clientErr">Please fill in all fields correctly.</div>
 
-        <button type="submit" class="submit-btn" id="submitBtn">
-          <div class="spinner"></div>
-          <span class="btn-text">Sign In →</span>
-        </button>
-      </form>
+        <form action="/login" method="POST" id="loginForm" novalidate>
+          <div class="field">
+            <div class="field-label">
+              <label for="email">Email address</label>
+            </div>
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="1" y="3" width="14" height="10" rx="2"/><path d="M1 5l7 5 7-5"/>
+              </svg>
+              <input type="email" id="email" name="email"
+                placeholder="you@company.com"
+                autocomplete="email" required/>
+            </div>
+          </div>
 
-      <div class="divider">or</div>
-      <a href="/" class="back-link">Back to <span>Home</span></a>
+          <div class="field">
+            <div class="field-label">
+              <label for="password">Password</label>
+            </div>
+            <div class="input-wrap">
+              <svg class="input-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <rect x="2" y="7" width="12" height="8" rx="2"/><path d="M5 7V5a3 3 0 0 1 6 0v2"/>
+              </svg>
+              <input type="password" id="password" name="password"
+                placeholder="Enter your password"
+                autocomplete="current-password" required/>
+              <button type="button" class="pw-toggle" id="pwToggle" onclick="togglePw()">Show</button>
+            </div>
+          </div>
+
+          <div class="err-banner" id="clientErr">
+            <span>✕</span> Please fill in all fields correctly.
+          </div>
+
+          <button type="submit" class="submit-btn" id="submitBtn">
+            <div class="spinner"></div>
+            <span class="btn-text">Sign In →</span>
+          </button>
+        </form>
+
+        <div class="form-footer">
+          <a href="/">← Back to home</a>
+        </div>
+      </div>
     </div>
   </div>
 </main>
 
-<!-- FOOTER -->
 <footer>
-  <p>© 2026 <strong style="color:rgba(255,255,255,.7)">INVENTRACK</strong>. All rights reserved.</p>
+  <p>© 2026 <strong style="color:rgba(255,255,255,.6)">INVENTRACK</strong>. All rights reserved.</p>
   <p>Developed by <a href="#">Mayur B Gund</a></p>
 </footer>
 
 <script>
   function togglePw() {
-    const pw = document.getElementById('password');
+    const pw  = document.getElementById('password');
     const btn = document.getElementById('pwToggle');
-    if (pw.type === 'password') {
-      pw.type = 'text'; btn.textContent = 'Hide';
-    } else {
-      pw.type = 'password'; btn.textContent = 'Show';
-    }
+    const isHidden = pw.type === 'password';
+    pw.type   = isHidden ? 'text' : 'password';
+    btn.textContent = isHidden ? 'Hide' : 'Show';
   }
 
   document.getElementById('loginForm').addEventListener('submit', function(e) {
     const email = document.getElementById('email').value.trim();
     const pw    = document.getElementById('password').value;
     const err   = document.getElementById('clientErr');
+    const btn   = document.getElementById('submitBtn');
 
     if (!email || !pw) {
       e.preventDefault();
       err.classList.add('show');
+      document.getElementById(email ? 'password' : 'email').classList.add('has-error');
       return;
     }
     err.classList.remove('show');
-
-    // loading state
-    const btn = document.getElementById('submitBtn');
     btn.classList.add('loading');
   });
-</script>
 
+  // Remove error highlight on input
+  ['email','password'].forEach(id => {
+    document.getElementById(id).addEventListener('input', function() {
+      this.classList.remove('has-error');
+      document.getElementById('clientErr').classList.remove('show');
+    });
+  });
+</script>
 </body>
 </html>
