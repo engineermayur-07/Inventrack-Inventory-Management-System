@@ -1,6 +1,10 @@
 import sqlite3
 import datetime
 from heap import *
+import random
+import smtplib
+from email.mime.text import MIMEText
+
 
 def login(email=None, password=None):
     conn = sqlite3.connect('database.db')
@@ -12,107 +16,34 @@ def login(email=None, password=None):
     return bool(user)
 
 
+def generate_otp():
+    """Generates a secure 6-digit random code."""
+    return str(random.randint(100000, 999999))
 
-def add_batch(email=None, product_name=None, batch_no=None, quantity=None, expiry_date=None):
+
+def send_otp_email(receiver_email, otp_code, name):
+    """Sends the OTP code using your verified app password."""
+    sender_email = "noreply.inventrack2026@gmail.com"
+    sender_password = "fwrfhdhxrfjfkbsq" 
     
-    conn = sqlite3.connect('database.db')
+    msg = MIMEText(f'''Hi {name},\n
+    Your OTP for registration is: {otp_code}\n\nThis code will expire shortly.\n\n
+    Regards\n Team Inventrack''')
+    msg["Subject"] = "🔐 INVENTRACK Registration OTP"
+    msg["From"] = sender_email
+    msg["To"] = receiver_email
+    
     try:
-        product_name = product_name.upper().strip()
-        expiry_date  = datetime.datetime.strptime(expiry_date, '%Y-%m-%d').date()
-        conn = sqlite3.connect('database.db')
-        cursor = conn.cursor()
-        
-        cursor.execute(" SELECT * FROM inventory WHERE batch_no = ?  ", (batch_no))
-        is_batchno_available = cursor.fetchone()
-
-        if(is_batchno_available) :
-            return False
-
-        cursor.execute(
-            "INSERT INTO inventory(user_email, product_name, batch_no, quantity, expiry_date) VALUES(?,?,?,?,?)",
-            (email, product_name, batch_no, quantity, expiry_date)
-        )
-        conn.commit()
-        conn.close()
-        load_from_db(email)  # Update the user's heap after adding a new batch
+        server = smtplib.SMTP("smtp.gmail.com", 587)
+        server.starttls()
+        server.login(sender_email, sender_password)
+        server.sendmail(sender_email, receiver_email, msg.as_string())
+        server.quit()
         return True
-    except Exception:
-        conn.close()
+    except Exception as e:
+        print(f"❌ Failed to send OTP: {e}")
         return False
 
-def sell_product(email=None, product_name=None, quantity=None):
-    try:
-        product_name = product_name.upper().strip()
-        conn = sqlite3.connect('database.db')
-        cursor = conn.cursor()
-        remaining = quantity
 
-        while remaining > 0:
-            batch = get_nearest_expiry( email, product_name)
-            if not batch:
-                conn.close()
-                return False
 
-            if batch[4] <= remaining:
-                remaining = remaining - batch[4]
-                cursor.execute(
-                    "DELETE FROM inventory WHERE user_email=? AND batch_no=? AND product_name=?",
-                    (email, batch[3], product_name)
-                )
-                conn.commit()
-                load_from_db(email)  # Update the user's heap after deleting a batch
-            else:
-                cursor.execute(
-                    "UPDATE inventory SET quantity=quantity-? WHERE user_email=? AND batch_no=? AND product_name=?",
-                    (remaining, email, batch[3], product_name)
-                )
-                conn.commit()
-                remaining = 0
 
-        conn.commit()
-        conn.close()
-        return True
-    except Exception:
-        conn.commit()
-        conn.close()
-        return False
-
-def get_all_inventory(email=None):
-    """Returns all inventory rows for the user, ordered by expiry date ascending."""
-     
-    try:
-        conn = sqlite3.connect('database.db')
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT * FROM inventory WHERE user_email=? ORDER BY expiry_date ASC",
-            (email,)
-        )
-        rows = cursor.fetchall()
-        conn.close()
-        return rows
-    except Exception as e:
-        conn.close()
-        print(f"Error in get_all_inventory: {e}")
-        return []
-
-def get_expiring_stocks(email=None):
-    """Returns inventory items expiring within 30 days."""
-     
-    try:
-        today          = datetime.date.today()
-        thirty_days    = today + datetime.timedelta(days=30)
-        max_date_str   = thirty_days.strftime('%Y-%m-%d')
-
-        conn = sqlite3.connect('database.db')
-        cursor = conn.cursor()
-        cursor.execute(
-            "SELECT * FROM inventory WHERE user_email=? AND expiry_date <= ? ORDER BY expiry_date ASC",
-            (email, max_date_str)
-        )
-        stocks = cursor.fetchall()
-        conn.close()
-        return stocks
-    except Exception as e:
-        conn.close()
-        print(f"Error in get_expiring_stocks: {e}")
-        return []

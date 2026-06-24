@@ -1,8 +1,12 @@
-from flask import Flask, render_template, session, request, redirect, url_for
+from flask import  *
 from auth import *
 from database_setup import init_db
 import datetime
 from heap import *
+import sqlite3  
+from inventory_management import *
+from sms import *
+
 
 app = Flask(__name__)
 app.secret_key = 'inventory_mayur_developer_2026'
@@ -49,6 +53,74 @@ def home():
             **ctx
         )
     return render_template('landing_page.html')
+
+
+@app.route('/register', methods=['GET', 'POST'])
+def register():
+    if request.method == 'POST':
+        email = request.form.get('email')
+        password = request.form.get('password')
+        name = request.form.get('name')
+        mobile = request.form.get('mobile')
+        
+         
+        otp = generate_otp()
+        
+         
+        session['temp_user'] = {
+            'email': email,
+            'password': password,
+            'name': name,
+            'otp': otp,
+            'mobile' : mobile
+        }
+        
+        if send_otp_email(email, otp, name):
+            flash("An OTP has been sent to your email. Please verify. Check your spam folder. Our emails are usually in spam folder.", "info")
+            return redirect(url_for('verify_otp_page'))
+
+        else:
+            flash("Error sending OTP email. Please try again.", "danger")
+            
+    return render_template('register.html')
+
+@app.route('/verify-otp', methods=['GET', 'POST'])
+def verify_otp_page():
+     
+    if 'temp_user' not in session:
+        return redirect(url_for('register'))
+        
+    if request.method == 'POST':
+        user_entered_otp = request.form.get('otp')
+        temp_data = session['temp_user']
+        
+         
+        if user_entered_otp == temp_data['otp']:
+             
+            try:
+                conn = sqlite3.connect('database.db')
+                cursor = conn.cursor()
+                cursor.execute(
+                    "INSERT INTO user (email, password, name, mobile) VALUES (?, ?, ?, ?)", 
+                    (temp_data['email'], temp_data['password'], temp_data['name'], temp_data['mobile'])
+                )
+                conn.commit()
+                conn.close()
+                
+                 
+                session.pop('temp_user', None)
+                is_registered = send_registration_alert(temp_data['name'], temp['email'])
+                flash("Registration successful! You can now log in.", "success")
+
+                return redirect(url_for('login_route'))
+            except Exception as e:
+                flash("Database error occurred during registration.", "danger")
+                print(e)
+        else:
+            # 🔴 OTP failed
+            flash("Invalid OTP code. Please look closely and try again.", "danger")
+            
+    return render_template('verify_otp.html')
 
 
 
@@ -125,17 +197,7 @@ def logout():
     return redirect(url_for('home'))
 
 
-@app.after_request
-def clear_browser_cache(response):
-    """
-    Forces the browser to destroy its local history cache for this app.
-    This stops the user from using back/forward arrows to view logged-out pages.
-    """
-    response.headers["Cache-Control"] = "no-store, no-cache, must-revalidate, max-age=0"
-    response.headers["Pragma"] = "no-cache"
-    response.headers["Expires"] = "0"
-    return response
-
+ 
 
 if __name__ == '__main__':
     app.run(debug=True)

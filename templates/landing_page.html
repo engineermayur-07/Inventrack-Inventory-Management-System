@@ -567,12 +567,15 @@
 <nav class="nav">
     <a href="#" class="nav-brand">
         <div class="nav-logo"><i class="fas fa-boxes-stacked"></i></div>
-        <span class="nav-name">INVENTRCK</span>
+        <span class="nav-name">INVENTRACK</span>
     </a>
     <div class="nav-right">
         <a href="#features" class="btn-nav-ghost">Features</a>
         <a href="{{ url_for('login_route') }}" class="btn-nav-login">
             <i class="fas fa-right-to-bracket"></i> Login
+        </a>
+        <a href="{{ url_for('register') }}" class="btn-nav-login">
+            <i class="fas fa-right-to-bracket"></i> Register
         </a>
     </div>
 </nav>
@@ -588,11 +591,11 @@
         <span class="grad-text">Never miss an expiry.</span>
     </h1>
     <p class="hero-sub">
-        INVENTRCK keeps your stock organized with automatic FIFO selling,
+        INVENTRACK keeps your stock organized with automatic FIFO selling,
         real-time expiry alerts, and batch-level precision — all in one clean dashboard.
     </p>
     <div class="hero-ctas">
-        <a href="{{ url_for('login_route') }}" class="btn-hero-prim">
+        <a href="{{ url_for('register') }}" class="btn-hero-prim">
             Get Started <i class="fas fa-arrow-right"></i>
         </a>
         <a href="#how-it-works" class="btn-hero-sec">
@@ -608,7 +611,7 @@
             <span class="preview-dot red"></span>
             <span class="preview-dot amber"></span>
             <span class="preview-dot green"></span>
-            <span class="preview-url">inventrck.local / dashboard</span>
+            <span class="preview-url">inventrack.local / dashboard</span>
         </div>
         <div class="preview-body">
             <div class="preview-stats">
@@ -696,7 +699,7 @@
 <section id="features">
     <div class="section-inner">
         <div class="section-header">
-            <span class="section-eyebrow">Why INVENTRCK</span>
+            <span class="section-eyebrow">Why INVENTRACK</span>
             <h2 class="section-title">Everything your inventory needs</h2>
             <p class="section-sub">Built for speed, accuracy, and expiry awareness — from batch entry to final sale.</p>
         </div>
@@ -820,6 +823,9 @@
             <a href="{{ url_for('login_route') }}" class="btn-cta">
                 <i class="fas fa-right-to-bracket"></i> Login to Dashboard
             </a>
+            <a href="{{ url_for('register') }}" class="btn-cta">
+                <i class="fas fa-right-to-bracket"></i> Register
+            </a>
         </div>
     </div>
 </section>
@@ -828,9 +834,9 @@
 <footer class="footer">
     <a href="#" class="footer-brand">
         <div class="footer-logo"><i class="fas fa-boxes-stacked"></i></div>
-        <span class="footer-name">INVENTRCK</span>
+        <span class="footer-name">INVENTRACK</span>
     </a>
-    <span class="footer-copy">Built by Mayur Gund · Sanjivani COE · 2026</span>
+    <span class="footer-copy">Built by Mayur B. Gund · Sanjivani COE · 2026</span>
 </footer>
 
 </body>

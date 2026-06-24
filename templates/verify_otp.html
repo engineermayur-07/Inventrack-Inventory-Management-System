@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Verify Registration OTP</title>
+</head>
+<body>
+    <h2>Security Verification</h2>
+    <p>Please enter the 6-digit confirmation code sent to your inbox.</p>
+    
+    {% with messages = get_flashed_messages(with_categories=true) %}
+      {% if messages %}
+        {% for category, message in messages %}
+          <div style="color: red;">{{ message }}</div>
+        {% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <form method="POST" action="/verify-otp">
+        <input type="text" name="otp" placeholder="Enter 6-Digit OTP" required max_length="6" autocomplete="off">
+        <button type="submit">Verify & Register Account</button>
+    </form>
+</body>
+</html>
