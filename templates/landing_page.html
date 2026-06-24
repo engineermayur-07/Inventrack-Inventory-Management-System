@@ -1,736 +1,837 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>INVENTRACK – Precision Inventory Management</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;0,9..144,900;1,9..144,900&display=swap" rel="stylesheet"/>
-  <style>
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>INVENTRCK — Smart Inventory Management</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --bg:      #060f1c;
+            --s1:      #091628;
+            --s2:      #0c1d35;
+            --card:    #0f2240;
+            --a:       #00c8e0;
+            --a2:      #0077b6;
+            --grad:    linear-gradient(135deg, #00c8e0 0%, #0077b6 100%);
+            --grad-r:  linear-gradient(135deg, #0077b6 0%, #00c8e0 100%);
+            --glow:    rgba(0, 200, 224, 0.10);
+            --txt:     #cce4ff;
+            --txt2:    #7ba5c8;
+            --txt3:    #4a6f92;
+            --ok:      #10d9a0;
+            --warn:    #f0b429;
+            --crit:    #f96060;
+            --bdr:     rgba(0, 200, 224, 0.07);
+            --bdr2:    rgba(0, 200, 224, 0.14);
+        }
 
-    :root {
-      --ink:      #080d1a;
-      --surface:  #f7f6f3;
-      --surface2: #eeecea;
-      --white:    #ffffff;
-      --accent:   #e05a1a;
-      --accent-h: #c44c12;
-      --accent-l: rgba(224,90,26,.12);
-      --blue:     #1b3f7e;
-      --muted:    #6b7280;
-      --muted2:   #9ca3af;
-      --border:   #e2e0db;
-      --card:     #ffffff;
-    }
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
 
-    html { scroll-behavior: smooth; font-size: 16px; }
-    body {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      background: var(--white);
-      color: var(--ink);
-      overflow-x: hidden;
-      -webkit-font-smoothing: antialiased;
-    }
+        body {
+            font-family: 'Inter', system-ui, sans-serif;
+            background: var(--bg);
+            color: var(--txt);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
 
-    /* ━━━━━ NAV ━━━━━ */
-    .nav-outer {
-      position: fixed; top: 0; left: 0; right: 0; z-index: 200;
-      background: rgba(255,255,255,.95);
-      backdrop-filter: blur(20px) saturate(180%);
-      -webkit-backdrop-filter: blur(20px) saturate(180%);
-      border-bottom: 1px solid var(--border);
-    }
-    nav {
-      max-width: 1280px; margin: 0 auto;
-      display: flex; align-items: center; justify-content: space-between;
-      padding: 0 2rem; height: 64px; gap: 1rem;
-    }
-    .logo {
-      display: flex; align-items: center; gap: 0.6rem;
-      text-decoration: none; flex-shrink: 0;
-    }
-    .logo-icon {
-      width: 32px; height: 32px; background: var(--ink);
-      border-radius: 8px; display: flex; align-items: center; justify-content: center;
-      font-size: 0.8rem; font-weight: 800; color: #fff;
-    }
-    .logo-text {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-weight: 800; font-size: 1.1rem;
-      letter-spacing: 0.04em; color: var(--ink);
-    }
-    .logo-text em { font-style: normal; color: var(--accent); }
+        ::-webkit-scrollbar { width: 5px; }
+        ::-webkit-scrollbar-track { background: var(--bg); }
+        ::-webkit-scrollbar-thumb { background: #4a6f92; border-radius: 3px; }
 
-    .nav-links { display: flex; gap: 0.25rem; list-style: none; }
-    .nav-links a {
-      padding: 0.4rem 0.85rem; border-radius: 8px;
-      font-size: 0.875rem; font-weight: 500;
-      color: var(--muted); text-decoration: none;
-      transition: background 0.15s, color 0.15s;
-    }
-    .nav-links a:hover { color: var(--ink); background: var(--surface); }
+        /* ─── AMBIENT BACKGROUND ─────────────────── */
+        body::before {
+            content: '';
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 15% 20%, rgba(0,119,182,0.13) 0%, transparent 60%),
+                radial-gradient(ellipse 60% 40% at 85% 75%, rgba(0,200,224,0.08) 0%, transparent 55%);
+            pointer-events: none; z-index: 0;
+        }
 
-    .nav-cta { display: flex; gap: 0.75rem; align-items: center; }
-    .btn-ghost {
-      padding: 0.45rem 1rem; border: 1.5px solid var(--border);
-      border-radius: 8px; font-size: 0.85rem; font-weight: 600;
-      color: var(--muted); text-decoration: none; background: transparent;
-      transition: all 0.15s;
-    }
-    .btn-ghost:hover { border-color: var(--ink); color: var(--ink); }
-    .btn-primary {
-      padding: 0.45rem 1.1rem; background: var(--accent);
-      border: 1.5px solid var(--accent); border-radius: 8px;
-      font-size: 0.85rem; font-weight: 700; color: #fff;
-      text-decoration: none; transition: all 0.15s;
-    }
-    .btn-primary:hover { background: var(--accent-h); border-color: var(--accent-h); }
+        /* ─── NAVBAR ─────────────────────────────── */
+        .nav {
+            position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+            padding: 0 40px;
+            height: 64px;
+            display: flex; align-items: center; justify-content: space-between;
+            background: rgba(6, 15, 28, 0.85);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid var(--bdr);
+        }
 
-    .hamburger { display: none; flex-direction: column; gap: 4px; cursor: pointer; background: none; border: none; padding: 8px; }
-    .hamburger span { width: 20px; height: 2px; background: var(--ink); border-radius: 2px; display: block; transition: all 0.3s; }
+        .nav-brand {
+            display: flex; align-items: center; gap: 11px;
+            text-decoration: none;
+        }
 
-    /* Mobile drawer */
-    .mobile-menu {
-      display: none; position: fixed; inset: 64px 0 0 0;
-      background: var(--white); z-index: 190; padding: 1.5rem;
-      flex-direction: column; gap: 0.5rem; border-top: 1px solid var(--border);
-    }
-    .mobile-menu.open { display: flex; }
-    .mobile-menu a {
-      display: block; padding: 0.875rem 1rem; border-radius: 10px;
-      font-size: 1rem; font-weight: 600; color: var(--ink);
-      text-decoration: none; border: 1px solid transparent; transition: all 0.15s;
-    }
-    .mobile-menu a:hover { background: var(--surface); border-color: var(--border); }
-    .mobile-menu-divider { height: 1px; background: var(--border); margin: 0.25rem 0; }
+        .nav-logo {
+            width: 34px; height: 34px;
+            background: var(--grad);
+            border-radius: 8px;
+            display: grid; place-items: center;
+            font-size: 14px; color: #fff;
+        }
 
-    /* ━━━━━ HERO ━━━━━ */
-    .hero {
-      min-height: 100vh;
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      align-items: center;
-      gap: 4rem;
-      max-width: 1280px;
-      margin: 0 auto;
-      padding: 8rem 2rem 5rem;
-    }
+        .nav-name {
+            font-size: 16px; font-weight: 900;
+            letter-spacing: 3px;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    .hero-badge {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.35rem 1rem;
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 100px;
-      font-size: 0.78rem; font-weight: 600;
-      color: var(--accent); margin-bottom: 1.5rem;
-      letter-spacing: 0.04em;
-    }
-    .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: pulse-dot 2s ease infinite; }
-    @keyframes pulse-dot { 0%,100%{ opacity:1; } 50%{ opacity:.4; } }
+        .nav-right { display: flex; align-items: center; gap: 12px; }
 
-    .hero-title {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(2.4rem, 5vw, 4rem);
-      font-weight: 900;
-      line-height: 1.05;
-      letter-spacing: -0.025em;
-      margin-bottom: 1.25rem;
-      color: var(--ink);
-    }
-    .hero-title em { font-style: italic; color: var(--accent); }
+        .btn-nav-login {
+            padding: 8px 20px; border-radius: 7px;
+            font-size: 13.5px; font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            background: var(--grad);
+            color: #fff;
+            text-decoration: none;
+            box-shadow: 0 3px 12px rgba(0,119,182,0.35);
+            transition: all .2s;
+        }
+        .btn-nav-login:hover { transform: translateY(-1px); box-shadow: 0 5px 16px rgba(0,119,182,0.5); }
 
-    .hero-sub {
-      font-size: 1.05rem; color: var(--muted); line-height: 1.75;
-      max-width: 500px; margin-bottom: 2.5rem;
-    }
+        .btn-nav-ghost {
+            padding: 7px 18px; border-radius: 7px;
+            font-size: 13.5px; font-weight: 500;
+            font-family: 'Inter', sans-serif;
+            background: transparent;
+            color: var(--txt2);
+            border: 1px solid var(--bdr2);
+            text-decoration: none;
+            transition: all .2s;
+        }
+        .btn-nav-ghost:hover { color: var(--a); border-color: var(--a); background: var(--glow); }
 
-    .hero-actions { display: flex; gap: 1rem; flex-wrap: wrap; align-items: center; margin-bottom: 3rem; }
-    .btn-lg {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.875rem 2rem; font-size: 1rem; font-weight: 700;
-      border-radius: 10px; text-decoration: none;
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      transition: all 0.2s;
-    }
-    .btn-lg-primary { background: var(--accent); color: #fff; border: 2px solid var(--accent); }
-    .btn-lg-primary:hover { background: var(--accent-h); border-color: var(--accent-h); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(224,90,26,.3); }
-    .btn-lg-outline { background: transparent; color: var(--ink); border: 2px solid var(--border); }
-    .btn-lg-outline:hover { border-color: var(--ink); }
+        /* ─── HERO ───────────────────────────────── */
+        .hero {
+            position: relative; z-index: 1;
+            padding-top: 140px; padding-bottom: 100px;
+            text-align: center;
+            padding-left: 24px; padding-right: 24px;
+        }
 
-    /* Trust strip */
-    .trust-strip {
-      display: flex; align-items: center; gap: 1.5rem;
-      flex-wrap: wrap;
-    }
-    .trust-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.82rem; color: var(--muted); font-weight: 500; }
-    .trust-icon { font-size: 1rem; }
-    .trust-sep { width: 1px; height: 16px; background: var(--border); }
+        .hero-eyebrow {
+            display: inline-flex; align-items: center; gap: 8px;
+            background: rgba(0,200,224,0.08);
+            border: 1px solid rgba(0,200,224,0.18);
+            color: var(--a);
+            font-size: 12px; font-weight: 600;
+            letter-spacing: 1.5px; text-transform: uppercase;
+            padding: 6px 16px; border-radius: 20px;
+            margin-bottom: 28px;
+        }
 
-    /* Hero visual */
-    .hero-visual { animation: fadeUp 0.8s cubic-bezier(0.22,1,0.36,1) 0.2s both; }
-    .dashboard-mock {
-      background: var(--card);
-      border-radius: 20px;
-      box-shadow: 0 40px 100px rgba(8,13,26,.14), 0 4px 20px rgba(8,13,26,.06);
-      border: 1px solid var(--border);
-      overflow: hidden;
-    }
-    .mock-bar {
-      background: var(--ink); padding: 0.875rem 1.25rem;
-      display: flex; align-items: center; gap: 0.5rem;
-    }
-    .mock-dot { width: 10px; height: 10px; border-radius: 50%; }
-    .mock-title {
-      font-size: 0.78rem; font-weight: 700;
-      color: rgba(255,255,255,.6); letter-spacing: 0.06em;
-      margin-left: auto;
-    }
+        .hero-title {
+            font-size: clamp(36px, 6vw, 64px);
+            font-weight: 900;
+            letter-spacing: -1.5px;
+            line-height: 1.1;
+            margin-bottom: 24px;
+            max-width: 820px;
+            margin-left: auto; margin-right: auto;
+        }
 
-    .mock-body { padding: 1.25rem; }
+        .hero-title .grad-text {
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
 
-    .mock-stats {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 0.75rem; margin-bottom: 1.25rem;
-    }
-    .mock-stat {
-      background: var(--surface); border-radius: 10px;
-      padding: 0.875rem; border: 1px solid var(--border);
-    }
-    .mock-stat-num {
-      font-family: 'Fraunces', serif;
-      font-size: 1.6rem; font-weight: 900; color: var(--ink);
-      line-height: 1;
-    }
-    .mock-stat:nth-child(2) .mock-stat-num { color: var(--accent); }
-    .mock-stat-lbl { font-size: 0.65rem; color: var(--muted); margin-top: 0.25rem; font-weight: 500; }
+        .hero-sub {
+            font-size: clamp(15px, 2vw, 18px);
+            color: var(--txt2);
+            max-width: 540px;
+            margin: 0 auto 40px;
+            line-height: 1.7;
+        }
 
-    .mock-table { width: 100%; border-collapse: collapse; }
-    .mock-table th {
-      font-size: 0.62rem; font-weight: 700; letter-spacing: 0.08em;
-      text-transform: uppercase; color: var(--muted);
-      padding: 0.5rem 0.5rem; border-bottom: 1px solid var(--border); text-align: left;
-    }
-    .mock-table td {
-      font-size: 0.75rem; padding: 0.6rem 0.5rem;
-      border-bottom: 1px solid var(--border); color: var(--ink);
-    }
-    .mock-table tr:last-child td { border-bottom: none; }
-    .mock-pill {
-      display: inline-block; padding: 0.18rem 0.55rem;
-      border-radius: 100px; font-size: 0.62rem; font-weight: 700;
-    }
-    .pill-warn { background: #fff7ed; color: #c2410c; }
-    .pill-ok   { background: #f0fdf4; color: #15803d; }
-    .mock-batch { font-family: monospace; font-size: 0.7rem; color: var(--muted); background: var(--surface); padding: 0.1rem 0.4rem; border-radius: 4px; }
+        .hero-ctas { display: flex; align-items: center; justify-content: center; gap: 12px; flex-wrap: wrap; }
 
-    /* ━━━━━ STATS STRIP ━━━━━ */
-    .stats-strip {
-      background: var(--ink);
-      padding: 0;
-    }
-    .stats-strip-inner {
-      max-width: 1280px; margin: 0 auto;
-      padding: 3rem 2rem;
-      display: grid; grid-template-columns: repeat(4, 1fr);
-      gap: 0; border-radius: 0;
-    }
-    .strip-item {
-      padding: 0 2rem;
-      border-right: 1px solid rgba(255,255,255,.08);
-      text-align: center;
-    }
-    .strip-item:first-child { padding-left: 0; }
-    .strip-item:last-child { padding-right: 0; border-right: none; }
-    .strip-num {
-      font-family: 'Fraunces', serif;
-      font-size: 2.5rem; font-weight: 900;
-      color: var(--accent); line-height: 1;
-    }
-    .strip-lbl { font-size: 0.82rem; color: rgba(255,255,255,.45); margin-top: 0.35rem; }
+        .btn-hero-prim {
+            padding: 13px 32px;
+            border-radius: 9px;
+            font-size: 15px; font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            background: var(--grad); color: #fff;
+            text-decoration: none;
+            box-shadow: 0 6px 24px rgba(0,119,182,0.4);
+            transition: all .2s;
+            display: inline-flex; align-items: center; gap: 9px;
+        }
+        .btn-hero-prim:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,119,182,0.55); }
 
-    /* ━━━━━ SECTION ━━━━━ */
-    section { padding: 6rem 0; }
-    .section-inner { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
-    .section-label {
-      font-size: 0.72rem; font-weight: 700; letter-spacing: 0.14em;
-      text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem;
-    }
-    .section-title {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(1.8rem, 3.5vw, 2.8rem);
-      font-weight: 900; line-height: 1.1;
-      letter-spacing: -0.02em; margin-bottom: 0.75rem;
-    }
-    .section-sub { font-size: 1rem; color: var(--muted); line-height: 1.7; max-width: 500px; }
+        .btn-hero-sec {
+            padding: 12px 28px;
+            border-radius: 9px;
+            font-size: 15px; font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            background: transparent; color: var(--txt2);
+            border: 1px solid var(--bdr2);
+            text-decoration: none;
+            transition: all .2s;
+            display: inline-flex; align-items: center; gap: 9px;
+        }
+        .btn-hero-sec:hover { border-color: var(--a); color: var(--a); background: var(--glow); }
 
-    /* ━━━━━ FEATURES ━━━━━ */
-    .features-header { margin-bottom: 3.5rem; }
-    .feat-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 1.25rem;
-    }
-    .feat-card {
-      background: var(--white);
-      border: 1px solid var(--border);
-      border-radius: 16px; padding: 1.75rem;
-      transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
-      position: relative; overflow: hidden;
-    }
-    .feat-card:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 20px 50px rgba(8,13,26,.08);
-      border-color: var(--border);
-    }
-    .feat-card::before {
-      content: '';
-      position: absolute; top: 0; left: 0; right: 0; height: 2px;
-      background: transparent;
-      transition: background 0.2s;
-    }
-    .feat-card:hover::before { background: var(--accent); }
+        /* ─── DASHBOARD PREVIEW ──────────────────── */
+        .hero-preview {
+            position: relative; z-index: 1;
+            max-width: 900px; margin: 70px auto 0;
+            padding: 0 24px;
+        }
 
-    .feat-icon {
-      width: 46px; height: 46px; border-radius: 12px;
-      background: var(--surface); border: 1px solid var(--border);
-      display: flex; align-items: center; justify-content: center;
-      font-size: 1.35rem; margin-bottom: 1.25rem;
-    }
-    .feat-card h3 {
-      font-family: 'Plus Jakarta Sans', sans-serif;
-      font-size: 1rem; font-weight: 800; margin-bottom: 0.5rem;
-    }
-    .feat-card p { font-size: 0.875rem; color: var(--muted); line-height: 1.7; }
+        .preview-card {
+            background: var(--s1);
+            border: 1px solid var(--bdr2);
+            border-radius: 14px;
+            overflow: hidden;
+            box-shadow: 0 30px 80px rgba(0,0,0,0.5), 0 0 0 1px var(--bdr);
+        }
 
-    /* ━━━━━ HOW IT WORKS ━━━━━ */
-    .how-section { background: var(--ink); }
-    .how-section .section-label { color: var(--accent); }
-    .how-section .section-title { color: #fff; }
-    .how-section .section-sub { color: rgba(255,255,255,.5); }
+        .preview-topbar {
+            background: var(--s2);
+            border-bottom: 1px solid var(--bdr);
+            padding: 12px 18px;
+            display: flex; align-items: center; gap: 8px;
+        }
 
-    .how-grid {
-      display: grid; grid-template-columns: repeat(3, 1fr);
-      gap: 2rem; margin-top: 3.5rem;
-    }
-    .how-step {
-      position: relative;
-      padding: 1.75rem;
-      background: rgba(255,255,255,.04);
-      border: 1px solid rgba(255,255,255,.07);
-      border-radius: 16px;
-    }
-    .how-step-num {
-      font-family: 'Fraunces', serif;
-      font-size: 3.5rem; font-weight: 900;
-      color: rgba(255,255,255,.07); line-height: 1;
-      margin-bottom: 1rem; letter-spacing: -0.02em;
-    }
-    .how-step-badge {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 32px; height: 32px; border-radius: 50%;
-      background: var(--accent); color: #fff;
-      font-size: 0.78rem; font-weight: 800;
-      margin-bottom: 1rem;
-    }
-    .how-step h4 { font-size: 1.05rem; font-weight: 800; color: #fff; margin-bottom: 0.5rem; }
-    .how-step p { font-size: 0.875rem; color: rgba(255,255,255,.5); line-height: 1.7; }
+        .preview-dot { width: 10px; height: 10px; border-radius: 50%; }
+        .preview-dot.red   { background: #f96060; }
+        .preview-dot.amber { background: #f0b429; }
+        .preview-dot.green { background: #10d9a0; }
 
-    /* ━━━━━ CTA ━━━━━ */
-    .cta-section { background: var(--surface); }
-    .cta-card {
-      background: var(--accent);
-      border-radius: 24px; padding: 5rem 3rem;
-      text-align: center; position: relative; overflow: hidden;
-    }
-    .cta-card::before {
-      content: 'INVENTRACK';
-      position: absolute; font-family: 'Fraunces', serif; font-weight: 900;
-      font-size: clamp(5rem, 12vw, 10rem); color: rgba(255,255,255,.06);
-      top: 50%; left: 50%; transform: translate(-50%,-50%);
-      white-space: nowrap; pointer-events: none; letter-spacing: -0.02em;
-    }
-    .cta-card h2 {
-      font-family: 'Fraunces', serif;
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 900; color: #fff; margin-bottom: 0.75rem;
-      letter-spacing: -0.02em; line-height: 1.1;
-      position: relative;
-    }
-    .cta-card p { color: rgba(255,255,255,.75); margin-bottom: 2.25rem; font-size: 1.05rem; position: relative; }
-    .btn-white {
-      display: inline-flex; align-items: center; gap: 0.5rem;
-      padding: 0.9rem 2.25rem; background: #fff; color: var(--accent);
-      border-radius: 10px; font-weight: 700; text-decoration: none;
-      font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1rem;
-      transition: transform 0.2s, box-shadow 0.2s;
-      position: relative;
-    }
-    .btn-white:hover { transform: translateY(-2px); box-shadow: 0 10px 30px rgba(0,0,0,.2); }
+        .preview-url {
+            flex: 1; margin: 0 12px;
+            background: var(--bg);
+            border: 1px solid var(--bdr);
+            border-radius: 5px;
+            padding: 4px 12px;
+            font-size: 11.5px; color: var(--txt3);
+            font-family: monospace;
+        }
 
-    /* ━━━━━ FOOTER ━━━━━ */
-    footer { background: #050912; }
-    .footer-inner {
-      max-width: 1280px; margin: 0 auto;
-      padding: 3.5rem 2rem 2rem;
-      display: grid; grid-template-columns: 2fr 1fr 1fr; gap: 3rem;
-      border-bottom: 1px solid rgba(255,255,255,.06);
-    }
-    .footer-brand-logo {
-      display: flex; align-items: center; gap: 0.6rem;
-      text-decoration: none; margin-bottom: 0.875rem;
-    }
-    .footer-brand-logo-icon { width: 28px; height: 28px; background: var(--accent); border-radius: 7px; display: flex; align-items: center; justify-content: center; font-size: 0.75rem; font-weight: 800; color: #fff; }
-    .footer-brand-logo-text { font-weight: 800; font-size: 1rem; letter-spacing: 0.04em; color: #fff; }
-    .footer-brand-logo-text em { font-style: normal; color: var(--accent); }
-    .footer-brand p { font-size: 0.83rem; line-height: 1.75; color: rgba(255,255,255,.35); max-width: 280px; }
-    .footer-col h5 { font-size: 0.68rem; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255,255,255,.4); margin-bottom: 1rem; }
-    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
-    .footer-col a { font-size: 0.83rem; color: rgba(255,255,255,.3); text-decoration: none; transition: color 0.2s; }
-    .footer-col a:hover { color: #fff; }
-    .footer-bottom {
-      max-width: 1280px; margin: 0 auto;
-      padding: 1.5rem 2rem;
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 0.5rem;
-    }
-    .footer-bottom p { font-size: 0.78rem; color: rgba(255,255,255,.25); }
-    .footer-bottom a { color: var(--accent); text-decoration: none; }
+        .preview-body { padding: 20px 24px; }
 
-    /* ━━━━━ ANIMATIONS ━━━━━ */
-    @keyframes fadeUp {
-      from { opacity: 0; transform: translateY(20px); }
-      to   { opacity: 1; transform: translateY(0); }
-    }
-    .fade-in { animation: fadeUp 0.6s cubic-bezier(0.22,1,0.36,1) both; }
-    .hero-text { animation: fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+        .preview-stats {
+            display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px;
+            margin-bottom: 18px;
+        }
 
-    /* ━━━━━ RESPONSIVE ━━━━━ */
-    @media (max-width: 1024px) {
-      .hero { grid-template-columns: 1fr; gap: 3rem; padding-top: 7rem; }
-      .hero-visual { order: -1; }
-      .hero-title { font-size: clamp(2rem, 5vw, 3rem); }
-      .feat-grid { grid-template-columns: 1fr 1fr; }
-      .how-grid { grid-template-columns: 1fr; gap: 1.25rem; }
-      .stats-strip-inner { grid-template-columns: repeat(2, 1fr); gap: 1.5rem; }
-      .strip-item { border-right: none; border-bottom: 1px solid rgba(255,255,255,.08); padding: 0 0 1.5rem; }
-      .strip-item:nth-child(3), .strip-item:nth-child(4) { border-bottom: none; }
-    }
-    @media (max-width: 768px) {
-      nav { padding: 0 1.25rem; }
-      .nav-links { display: none; }
-      .nav-cta .btn-ghost { display: none; }
-      .hamburger { display: flex; }
-      .hero { padding: 5.5rem 1.25rem 3rem; gap: 2rem; }
-      .feat-grid { grid-template-columns: 1fr; }
-      section { padding: 4rem 0; }
-      .section-inner { padding: 0 1.25rem; }
-      .cta-card { padding: 3rem 1.5rem; }
-      .footer-inner { grid-template-columns: 1fr; gap: 2rem; padding: 2.5rem 1.25rem 1.5rem; }
-      .footer-bottom { padding: 1.25rem; flex-direction: column; align-items: flex-start; }
-      .mock-stats { grid-template-columns: repeat(2, 1fr); }
-      .trust-strip { gap: 0.75rem; }
-      .trust-sep { display: none; }
-    }
-    @media (max-width: 480px) {
-      .stats-strip-inner { grid-template-columns: 1fr 1fr; padding: 2rem 1.25rem; gap: 1.5rem; }
-      .strip-item { padding: 0 0 1rem; }
-    }
-  </style>
+        .pstat {
+            background: var(--card);
+            border: 1px solid var(--bdr);
+            border-radius: 9px; padding: 14px 16px;
+        }
+        .pstat-val { font-size: 22px; font-weight: 800; }
+        .pstat-lbl { font-size: 11px; color: var(--txt3); margin-top: 2px; }
+
+        .preview-table { width: 100%; border-collapse: collapse; }
+        .preview-table th {
+            font-size: 11px; font-weight: 600; letter-spacing: 0.5px;
+            text-transform: uppercase; color: var(--txt3);
+            padding: 8px 12px; text-align: left;
+            border-bottom: 1px solid var(--bdr);
+        }
+        .preview-table td { padding: 9px 12px; font-size: 13px; }
+        .preview-table tr + tr td { border-top: 1px solid var(--bdr); }
+
+        .ptr-ok   { border-left: 3px solid var(--ok); }
+        .ptr-warn { border-left: 3px solid var(--warn); }
+        .ptr-crit { border-left: 3px solid var(--crit); }
+        .ptr-dead { border-left: 3px solid var(--dead); }
+
+        .mini-badge {
+            padding: 2px 8px; border-radius: 10px;
+            font-size: 10px; font-weight: 600;
+        }
+        .mb-ok   { background: rgba(16,217,160,0.12); color: var(--ok); }
+        .mb-warn { background: rgba(240,180,41,0.12); color: var(--warn); }
+        .mb-crit { background: rgba(249,96,96,0.12); color: var(--crit); }
+        .mb-dead { background: rgba(255,51,51,0.15); color: var(--dead); }
+
+        /* ─── SECTION WRAPPER ────────────────────── */
+        section { position: relative; z-index: 1; }
+
+        .section-inner {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 90px 24px;
+        }
+
+        .section-header { text-align: center; margin-bottom: 60px; }
+
+        .section-eyebrow {
+            display: inline-block;
+            font-size: 11px; font-weight: 700;
+            letter-spacing: 2px; text-transform: uppercase;
+            color: var(--a);
+            margin-bottom: 14px;
+        }
+
+        .section-title {
+            font-size: clamp(26px, 4vw, 38px);
+            font-weight: 800; letter-spacing: -.5px;
+            margin-bottom: 14px;
+        }
+
+        .section-sub {
+            font-size: 15.5px; color: var(--txt2);
+            max-width: 500px; margin: 0 auto;
+            line-height: 1.7;
+        }
+
+        /* ─── FEATURES ───────────────────────────── */
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+
+        .feat-card {
+            background: var(--s1);
+            border: 1px solid var(--bdr);
+            border-radius: 12px;
+            padding: 28px 26px;
+            transition: all .25s;
+        }
+        .feat-card:hover {
+            border-color: var(--bdr2);
+            transform: translateY(-3px);
+            box-shadow: 0 12px 36px rgba(0,0,0,0.3);
+            background: var(--s2);
+        }
+
+        .feat-icon {
+            width: 48px; height: 48px;
+            border-radius: 12px;
+            display: grid; place-items: center;
+            font-size: 20px;
+            margin-bottom: 18px;
+        }
+        .feat-icon.blue  { background: rgba(0,119,182,0.15); color: var(--a2); }
+        .feat-icon.cyan  { background: rgba(0,200,224,0.12); color: var(--a); }
+        .feat-icon.green { background: rgba(16,217,160,0.12); color: var(--ok); }
+        .feat-icon.amber { background: rgba(240,180,41,0.12); color: var(--warn); }
+        .feat-icon.red   { background: rgba(249,96,96,0.10); color: var(--crit); }
+        .feat-icon.purple{ background: rgba(139,92,246,0.12); color: #a78bfa; }
+
+        .feat-title { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+        .feat-desc  { font-size: 14px; color: var(--txt2); line-height: 1.65; }
+
+        /* ─── HOW IT WORKS ───────────────────────── */
+        .steps-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 0;
+            position: relative;
+        }
+
+        .steps-row::before {
+            content: '';
+            position: absolute; top: 36px; left: 15%; right: 15%;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, var(--bdr2), var(--bdr2), transparent);
+            z-index: 0;
+        }
+
+        .step {
+            text-align: center; padding: 0 20px;
+            position: relative; z-index: 1;
+        }
+
+        .step-num {
+            width: 52px; height: 52px;
+            border-radius: 50%;
+            background: var(--grad);
+            display: grid; place-items: center;
+            margin: 0 auto 20px;
+            font-size: 18px; font-weight: 800; color: #fff;
+            box-shadow: 0 6px 20px rgba(0,119,182,0.35);
+        }
+
+        .step-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .step-desc  { font-size: 14px; color: var(--txt2); line-height: 1.65; }
+
+        /* ─── DIVIDER ─────────────────────────────── */
+        .section-divider {
+            max-width: 1100px; margin: 0 auto;
+            border: none; border-top: 1px solid var(--bdr);
+        }
+
+        /* ─── STATS BAR ──────────────────────────── */
+        .stats-bar {
+            background: var(--s1);
+            border-top: 1px solid var(--bdr);
+            border-bottom: 1px solid var(--bdr);
+        }
+
+        .stats-row {
+            max-width: 900px; margin: 0 auto;
+            display: grid; grid-template-columns: repeat(3, 1fr);
+            padding: 50px 24px;
+        }
+
+        .stat-item { text-align: center; }
+        .stat-item + .stat-item {
+            border-left: 1px solid var(--bdr);
+        }
+
+        .stat-num {
+            font-size: 40px; font-weight: 900;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.1;
+        }
+
+        .stat-lbl {
+            font-size: 14px; color: var(--txt2);
+            margin-top: 6px;
+        }
+
+        /* ─── CONTACT ────────────────────────────── */
+        .contact-card {
+            background: var(--s1);
+            border: 1px solid var(--bdr);
+            border-radius: 16px;
+            padding: 50px 48px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .contact-left .section-title { text-align: left; margin-bottom: 12px; }
+        .contact-left .section-sub   { text-align: left; margin-left: 0; margin-bottom: 28px; }
+
+        .contact-links { display: flex; flex-direction: column; gap: 14px; }
+
+        .contact-link {
+            display: flex; align-items: center; gap: 16px;
+            text-decoration: none;
+            padding: 14px 20px;
+            border-radius: 10px;
+            background: var(--s2);
+            border: 1px solid var(--bdr);
+            transition: all .2s;
+        }
+        .contact-link:hover {
+            border-color: var(--bdr2);
+            background: var(--card);
+            transform: translateX(4px);
+        }
+
+        .clink-icon {
+            width: 38px; height: 38px;
+            border-radius: 9px;
+            display: grid; place-items: center;
+            font-size: 15px;
+            flex-shrink: 0;
+        }
+        .ci-email  { background: rgba(0,200,224,0.12); color: var(--a); }
+        .ci-li     { background: rgba(10,102,194,0.15); color: #0a98f5; }
+        .ci-gh     { background: rgba(240,246,252,0.06); color: #e2e8f0; }
+
+        .clink-info { flex: 1; min-width: 0; }
+        .clink-type { font-size: 11px; font-weight: 600; color: var(--txt3); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 2px; }
+        .clink-val  { font-size: 13.5px; font-weight: 500; color: var(--txt); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+
+        .clink-arr  { color: var(--txt3); font-size: 12px; }
+        .contact-link:hover .clink-arr { color: var(--a); }
+
+        .contact-right { text-align: center; }
+
+        .contact-avatar {
+            width: 90px; height: 90px;
+            border-radius: 50%;
+            background: var(--grad);
+            display: grid; place-items: center;
+            font-size: 36px; color: #fff;
+            margin: 0 auto 18px;
+            box-shadow: 0 8px 28px rgba(0,119,182,0.4);
+        }
+
+        .contact-name  { font-size: 22px; font-weight: 800; margin-bottom: 6px; }
+        .contact-role  { font-size: 14px; color: var(--txt2); margin-bottom: 4px; }
+        .contact-school{ font-size: 13px; color: var(--txt3); }
+
+        /* ─── CTA BANNER ─────────────────────────── */
+        .cta-banner {
+            background: var(--grad);
+            border-radius: 16px;
+            padding: 56px 48px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-banner::before {
+            content: '';
+            position: absolute; inset: 0;
+            background: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.04'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+        }
+
+        .cta-banner h2 { font-size: 30px; font-weight: 800; color: #fff; margin-bottom: 12px; position: relative; }
+        .cta-banner p  { color: rgba(255,255,255,0.8); font-size: 16px; margin-bottom: 30px; position: relative; }
+
+        .btn-cta {
+            display: inline-flex; align-items: center; gap: 9px;
+            padding: 13px 32px; border-radius: 9px;
+            font-size: 15px; font-weight: 700;
+            font-family: 'Inter', sans-serif;
+            background: rgba(255,255,255,0.15);
+            color: #fff;
+            text-decoration: none;
+            border: 1.5px solid rgba(255,255,255,0.35);
+            backdrop-filter: blur(4px);
+            transition: all .2s;
+            position: relative;
+        }
+        .btn-cta:hover {
+            background: rgba(255,255,255,0.25);
+            border-color: rgba(255,255,255,0.6);
+            transform: translateY(-2px);
+        }
+
+        /* ─── FOOTER ─────────────────────────────── */
+        .footer {
+            border-top: 1px solid var(--bdr);
+            padding: 28px 40px;
+            display: flex; align-items: center; justify-content: space-between;
+            flex-wrap: wrap; gap: 12px;
+            position: relative; z-index: 1;
+        }
+
+        .footer-brand {
+            display: flex; align-items: center; gap: 10px;
+            text-decoration: none;
+        }
+
+        .footer-logo {
+            width: 28px; height: 28px;
+            background: var(--grad);
+            border-radius: 7px;
+            display: grid; place-items: center;
+            font-size: 12px; color: #fff;
+        }
+
+        .footer-name {
+            font-size: 13px; font-weight: 800;
+            letter-spacing: 2px;
+            background: var(--grad);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .footer-copy { font-size: 13px; color: var(--txt3); }
+
+        /* ─── RESPONSIVE ─────────────────────────── */
+        @media (max-width: 900px) {
+            .nav { padding: 0 20px; }
+            .preview-stats { grid-template-columns: repeat(2, 1fr); }
+            .contact-card { grid-template-columns: 1fr; gap: 36px; }
+            .contact-right { border-top: 1px solid var(--bdr); padding-top: 36px; }
+        }
+
+        @media (max-width: 640px) {
+            .hero { padding-top: 110px; padding-bottom: 70px; }
+            .section-inner { padding: 60px 18px; }
+            .preview-stats { grid-template-columns: repeat(2, 1fr); }
+            .steps-row::before { display: none; }
+            .steps-row { gap: 28px; }
+            .stats-row { grid-template-columns: 1fr; gap: 28px; }
+            .stat-item + .stat-item { border-left: none; border-top: 1px solid var(--bdr); padding-top: 28px; }
+            .contact-card { padding: 30px 24px; }
+            .cta-banner { padding: 40px 24px; }
+            .footer { padding: 22px 18px; }
+            .btn-nav-ghost { display: none; }
+        }
+    </style>
 </head>
 <body>
 
-<!-- ━━━ NAV ━━━ -->
-<div class="nav-outer">
-  <nav>
-    <a href="/" class="logo">
-      <div class="logo-icon">IT</div>
-      <span class="logo-text">INVEN<em>TRACK</em></span>
+<!-- NAVBAR -->
+<nav class="nav">
+    <a href="#" class="nav-brand">
+        <div class="nav-logo"><i class="fas fa-boxes-stacked"></i></div>
+        <span class="nav-name">INVENTRCK</span>
     </a>
-    <ul class="nav-links">
-      <li><a href="#features">Features</a></li>
-      <li><a href="#how">How It Works</a></li>
-    </ul>
-    <div class="nav-cta">
-      <a href="/login" class="btn-ghost">Sign In</a>
-      <a href="/contact" class="btn-primary">Get Started →</a>
+    <div class="nav-right">
+        <a href="#features" class="btn-nav-ghost">Features</a>
+        <a href="{{ url_for('login_route') }}" class="btn-nav-login">
+            <i class="fas fa-right-to-bracket"></i> Login
+        </a>
     </div>
-    <button class="hamburger" id="hamburgerBtn" aria-label="Menu">
-      <span></span><span></span><span></span>
-    </button>
-  </nav>
-</div>
+</nav>
 
-<div class="mobile-menu" id="mobileMenu">
-  <a href="#features">Features</a>
-  <a href="#how">How It Works</a>
-  <div class="mobile-menu-divider"></div>
-  <a href="/login">Sign In</a>
-  <a href="/contact" style="background:var(--accent);color:#fff;">Get Started →</a>
-</div>
-
-<!-- ━━━ HERO ━━━ -->
-<section style="background:var(--white); padding:0;">
-  <div class="hero">
-    <div class="hero-text">
-      <div class="hero-badge">
-        <div class="hero-badge-dot"></div>
-        Inventory Intelligence Platform
-      </div>
-      <h1 class="hero-title">
-        Track Every Batch.<br/>Never Miss an <em>Expiry.</em>
-      </h1>
-      <p class="hero-sub">
-        INVENTRACK gives you real-time visibility into your inventory — batch-level tracking, 30-day expiry alerts, and smart FIFO selling built for businesses that can't afford errors.
-      </p>
-      <div class="hero-actions">
-        <a href="/contact" class="btn-lg btn-lg-primary">Start for Free →</a>
-        <a href="#features" class="btn-lg btn-lg-outline">See Features</a>
-      </div>
-      <div class="trust-strip">
-        <div class="trust-item"><span class="trust-icon">✓</span> No credit card</div>
-        <div class="trust-sep"></div>
-        <div class="trust-item"><span class="trust-icon">✓</span> Free forever plan</div>
-        <div class="trust-sep"></div>
-        <div class="trust-item"><span class="trust-icon">✓</span> Secure &amp; private</div>
-      </div>
+<!-- HERO -->
+<section class="hero">
+    <span class="hero-eyebrow">
+        <i class="fas fa-circle" style="font-size:7px"></i>
+        FIFO Expiry-Aware Inventory System
+    </span>
+    <h1 class="hero-title">
+        Track every batch.<br>
+        <span class="grad-text">Never miss an expiry.</span>
+    </h1>
+    <p class="hero-sub">
+        INVENTRCK keeps your stock organized with automatic FIFO selling,
+        real-time expiry alerts, and batch-level precision — all in one clean dashboard.
+    </p>
+    <div class="hero-ctas">
+        <a href="{{ url_for('login_route') }}" class="btn-hero-prim">
+            Get Started <i class="fas fa-arrow-right"></i>
+        </a>
+        <a href="#how-it-works" class="btn-hero-sec">
+            <i class="fas fa-play-circle"></i> See how it works
+        </a>
     </div>
-    <div class="hero-visual">
-      <div class="dashboard-mock">
-        <div class="mock-bar">
-          <div class="mock-dot" style="background:#ff5f57"></div>
-          <div class="mock-dot" style="background:#ffbd2e; margin-left:4px"></div>
-          <div class="mock-dot" style="background:#28c940; margin-left:4px"></div>
-          <span class="mock-title">INVENTRACK Dashboard</span>
-        </div>
-        <div class="mock-body">
-          <div class="mock-stats">
-            <div class="mock-stat">
-              <div class="mock-stat-num">284</div>
-              <div class="mock-stat-lbl">Total Products</div>
-            </div>
-            <div class="mock-stat">
-              <div class="mock-stat-num">12</div>
-              <div class="mock-stat-lbl">Expiring Soon</div>
-            </div>
-            <div class="mock-stat">
-              <div class="mock-stat-num">47</div>
-              <div class="mock-stat-lbl">Active Batches</div>
-            </div>
-          </div>
-          <table class="mock-table">
-            <thead>
-              <tr>
-                <th>Product</th>
-                <th>Batch</th>
-                <th>Qty</th>
-                <th>Expiry</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr>
-                <td><strong>PARACETAMOL</strong></td>
-                <td><span class="mock-batch">B-2041</span></td>
-                <td>500</td>
-                <td style="color:#9ca3af; font-size:.7rem">Jul 15, '26</td>
-                <td><span class="mock-pill pill-warn">Soon</span></td>
-              </tr>
-              <tr>
-                <td><strong>AMOXICILLIN</strong></td>
-                <td><span class="mock-batch">B-2038</span></td>
-                <td>120</td>
-                <td style="color:#9ca3af; font-size:.7rem">Sep 02, '26</td>
-                <td><span class="mock-pill pill-ok">● Good</span></td>
-              </tr>
-              <tr>
-                <td><strong>VITAMIN-C</strong></td>
-                <td><span class="mock-batch">B-2044</span></td>
-                <td>300</td>
-                <td style="color:#9ca3af; font-size:.7rem">Aug 20, '26</td>
-                <td><span class="mock-pill pill-ok">● Good</span></td>
-              </tr>
-              <tr>
-                <td><strong>IBUPROFEN</strong></td>
-                <td><span class="mock-batch">B-2029</span></td>
-                <td>80</td>
-                <td style="color:#9ca3af; font-size:.7rem">Jun 28, '26</td>
-                <td><span class="mock-pill pill-warn">Soon</span></td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </div>
-  </div>
 </section>
 
-<!-- ━━━ STATS ━━━ -->
-<div class="stats-strip">
-  <div class="stats-strip-inner">
-    <div class="strip-item">
-      <div class="strip-num">10K+</div>
-      <div class="strip-lbl">Batches tracked</div>
+<!-- DASHBOARD PREVIEW -->
+<div class="hero-preview">
+    <div class="preview-card">
+        <div class="preview-topbar">
+            <span class="preview-dot red"></span>
+            <span class="preview-dot amber"></span>
+            <span class="preview-dot green"></span>
+            <span class="preview-url">inventrck.local / dashboard</span>
+        </div>
+        <div class="preview-body">
+            <div class="preview-stats">
+                <div class="pstat">
+                    <div class="pstat-val" style="background:var(--grad);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;">12</div>
+                    <div class="pstat-lbl">Unique Products</div>
+                </div>
+                <div class="pstat">
+                    <div class="pstat-val" style="color:var(--txt)">34</div>
+                    <div class="pstat-lbl">Total Batches</div>
+                </div>
+                <div class="pstat">
+                    <div class="pstat-val" style="color:var(--warn)">5</div>
+                    <div class="pstat-lbl">Expiring ≤30 days</div>
+                </div>
+                <div class="pstat">
+                    <div class="pstat-val" style="color:var(--ok)">1,840</div>
+                    <div class="pstat-lbl">Total Units</div>
+                </div>
+            </div>
+            <table class="preview-table">
+                <thead>
+                    <tr>
+                        <th>Product</th>
+                        <th>Batch</th>
+                        <th>Qty</th>
+                        <th>Expiry</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="ptr-dead">
+                        <td>PARACETAMOL</td>
+                        <td style="font-family:monospace;color:var(--txt3)">B-0041</td>
+                        <td>48</td>
+                        <td>2025-05-10</td>
+                        <td><span class="mini-badge mb-dead">Expired</span></td>
+                    </tr>
+                    <tr class="ptr-crit">
+                        <td>AMOXICILLIN</td>
+                        <td style="font-family:monospace;color:var(--txt3)">B-0089</td>
+                        <td>120</td>
+                        <td>2025-06-05</td>
+                        <td><span class="mini-badge mb-crit">Critical</span></td>
+                    </tr>
+                    <tr class="ptr-warn">
+                        <td>VITAMIN C</td>
+                        <td style="font-family:monospace;color:var(--txt3)">B-0104</td>
+                        <td>240</td>
+                        <td>2025-07-15</td>
+                        <td><span class="mini-badge mb-warn">Caution</span></td>
+                    </tr>
+                    <tr class="ptr-ok">
+                        <td>IBUPROFEN</td>
+                        <td style="font-family:monospace;color:var(--txt3)">B-0122</td>
+                        <td>500</td>
+                        <td>2026-03-20</td>
+                        <td><span class="mini-badge mb-ok">Good</span></td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </div>
-    <div class="strip-item">
-      <div class="strip-num">99.9%</div>
-      <div class="strip-lbl">Uptime reliability</div>
-    </div>
-    <div class="strip-item">
-      <div class="strip-num">30d</div>
-      <div class="strip-lbl">Advance expiry alerts</div>
-    </div>
-    <div class="strip-item">
-      <div class="strip-num">FIFO</div>
-      <div class="strip-lbl">Smart auto-sell logic</div>
-    </div>
-  </div>
 </div>
 
-<!-- ━━━ FEATURES ━━━ -->
+<!-- STATS BAR -->
+<div class="stats-bar" style="margin-top:100px">
+    <div class="stats-row">
+        <div class="stat-item">
+            <div class="stat-num">FIFO</div>
+            <div class="stat-lbl">Automatic expiry-first selling</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">≤30d</div>
+            <div class="stat-lbl">Real-time expiry alerts</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-num">100%</div>
+            <div class="stat-lbl">Batch-level accuracy</div>
+        </div>
+    </div>
+</div>
+
+<!-- FEATURES -->
 <section id="features">
-  <div class="section-inner">
-    <div class="features-header">
-      <div class="section-label">What We Offer</div>
-      <h2 class="section-title">Everything you need to manage<br/>inventory with confidence.</h2>
-      <p class="section-sub">Purpose-built tools that remove guesswork from inventory management and keep you always in control.</p>
+    <div class="section-inner">
+        <div class="section-header">
+            <span class="section-eyebrow">Why INVENTRCK</span>
+            <h2 class="section-title">Everything your inventory needs</h2>
+            <p class="section-sub">Built for speed, accuracy, and expiry awareness — from batch entry to final sale.</p>
+        </div>
+        <div class="features-grid">
+            <div class="feat-card">
+                <div class="feat-icon blue"><i class="fas fa-layer-group"></i></div>
+                <div class="feat-title">Batch-Level Tracking</div>
+                <div class="feat-desc">Every stock entry is tied to a unique batch number, so you always know exactly where each unit came from and when it expires.</div>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon cyan"><i class="fas fa-robot"></i></div>
+                <div class="feat-title">Automatic FIFO Selling</div>
+                <div class="feat-desc">Powered by a Min-Heap, sales always pull from the nearest-to-expiry batch first — no manual sorting, no wasted stock.</div>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon red"><i class="fas fa-triangle-exclamation"></i></div>
+                <div class="feat-title">Expiry Alerts</div>
+                <div class="feat-desc">Color-coded warnings at 30 days, 10 days, and day-of-expiry keep you ahead of losses before they happen.</div>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon green"><i class="fas fa-chart-bar"></i></div>
+                <div class="feat-title">Live Dashboard</div>
+                <div class="feat-desc">Instant overview of all your products, batches, quantities, and expiry statuses — filterable and searchable in real time.</div>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon amber"><i class="fas fa-shield-halved"></i></div>
+                <div class="feat-title">Per-User Isolation</div>
+                <div class="feat-desc">Each account manages its own private inventory. No data bleeds between users — session-backed and secure by design.</div>
+            </div>
+            <div class="feat-card">
+                <div class="feat-icon purple"><i class="fas fa-mobile-screen"></i></div>
+                <div class="feat-title">Responsive by Default</div>
+                <div class="feat-desc">Works on desktop, tablet, and mobile with a collapsible sidebar and a touch-friendly interface throughout.</div>
+            </div>
+        </div>
     </div>
-    <div class="feat-grid">
-      <div class="feat-card">
-        <div class="feat-icon">📦</div>
-        <h3>Batch-Level Tracking</h3>
-        <p>Add products with batch numbers, quantities, and expiry dates. Know exactly where every unit is, at any time, across all batches.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">⏰</div>
-        <h3>Expiry Alert System</h3>
-        <p>Get 30-day advance warnings before any batch expires. Act before it's too late — avoid wastage and compliance issues.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">⚡</div>
-        <h3>FIFO Auto-Selling</h3>
-        <p>When you sell, INVENTRACK automatically deducts from the earliest-expiring batch first. No manual effort, no errors.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">⊞</div>
-        <h3>Real-Time Dashboard</h3>
-        <p>A clean, live overview of all your stock, expiry timelines, and key metrics — updated instantly every time you act.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">🔐</div>
-        <h3>Isolated User Accounts</h3>
-        <p>Each business gets its own private inventory space. Your data is never shared with or visible to other accounts.</p>
-      </div>
-      <div class="feat-card">
-        <div class="feat-icon">📱</div>
-        <h3>Mobile-First Design</h3>
-        <p>Fully responsive — manage stock from your phone on the warehouse floor or your desktop in the office. Seamlessly.</p>
-      </div>
-    </div>
-  </div>
 </section>
 
-<!-- ━━━ HOW IT WORKS ━━━ -->
-<section id="how" class="how-section">
-  <div class="section-inner">
-    <div class="section-label">Simple Process</div>
-    <h2 class="section-title" style="color:#fff">Up and running<br/>in minutes.</h2>
-    <p class="section-sub">No complex setup. No training required. Just sign up and start tracking.</p>
-    <div class="how-grid">
-      <div class="how-step">
-        <div class="how-step-num">01</div>
-        <div class="how-step-badge">1</div>
-        <h4>Contact Us </h4>
-        <p>We will register you as a company account and provide you with access to your private inventory space.</p>
-      </div>
-      <div class="how-step">
-        <div class="how-step-num">02</div>
-        <div class="how-step-badge">2</div>
-        <h4>Add Your Batches</h4>
-        <p>Input product name, batch number, quantity, and expiry date. As simple as filling a form. Track as many batches as you need.</p>
-      </div>
-      <div class="how-step">
-        <div class="how-step-num">03</div>
-        <div class="how-step-badge">3</div>
-        <h4>Track, Sell &amp; Alert</h4>
-        <p>Sell products with one click. INVENTRACK handles FIFO deduction automatically and alerts you 30 days before expiry.</p>
-      </div>
+<!-- HOW IT WORKS -->
+<div class="stats-bar">
+<section id="how-it-works">
+    <div class="section-inner">
+        <div class="section-header">
+            <span class="section-eyebrow">Workflow</span>
+            <h2 class="section-title">Simple to use, smart inside</h2>
+            <p class="section-sub">Three steps to a fully managed, expiry-aware inventory.</p>
+        </div>
+        <div class="steps-row">
+            <div class="step">
+                <div class="step-num">1</div>
+                <div class="step-title">Add a Batch</div>
+                <div class="step-desc">Enter the product name, batch number, quantity, and expiry date. The system loads it into memory instantly.</div>
+            </div>
+            <div class="step">
+                <div class="step-num">2</div>
+                <div class="step-title">Monitor Expiry</div>
+                <div class="step-desc">Your dashboard highlights batches approaching expiry in real time — no guesswork, no spreadsheets.</div>
+            </div>
+            <div class="step">
+                <div class="step-num">3</div>
+                <div class="step-title">Sell Products</div>
+                <div class="step-desc">Enter a product and quantity. INVENTRCK automatically fulfills the order from the oldest batches first, across multiple batches if needed.</div>
+            </div>
+        </div>
     </div>
-  </div>
+</section>
+</div>
+
+<!-- CONTACT -->
+<section id="contact">
+    <div class="section-inner">
+        <div class="contact-card">
+            <div class="contact-left">
+                <span class="section-eyebrow">Contact</span>
+                <h2 class="section-title">Get in touch</h2>
+                <p class="section-sub">Have questions, feedback, or ideas? Reach out via any of these channels.</p>
+                <div class="contact-links" style="margin-top:28px;">
+                    <a href="mailto:mgund1920@gmail.com" class="contact-link">
+                        <div class="clink-icon ci-email"><i class="fas fa-envelope"></i></div>
+                        <div class="clink-info">
+                            <div class="clink-type">Email</div>
+                            <div class="clink-val">mgund1920@gmail.com</div>
+                        </div>
+                        <i class="fas fa-arrow-up-right-from-square clink-arr"></i>
+                    </a>
+                    <a href="https://linkedin.com/in/mgund1920" target="_blank" class="contact-link">
+                        <div class="clink-icon ci-li"><i class="fab fa-linkedin-in"></i></div>
+                        <div class="clink-info">
+                            <div class="clink-type">LinkedIn</div>
+                            <div class="clink-val">linkedin.com/in/mgund1920</div>
+                        </div>
+                        <i class="fas fa-arrow-up-right-from-square clink-arr"></i>
+                    </a>
+                    <a href="https://github.com/engineermayur-07" target="_blank" class="contact-link">
+                        <div class="clink-icon ci-gh"><i class="fab fa-github"></i></div>
+                        <div class="clink-info">
+                            <div class="clink-type">GitHub</div>
+                            <div class="clink-val">github.com/engineermayur-07</div>
+                        </div>
+                        <i class="fas fa-arrow-up-right-from-square clink-arr"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="contact-right">
+                <div class="contact-avatar"><i class="fas fa-user-graduate"></i></div>
+                <div class="contact-name">Mayur Gund</div>
+                <div class="contact-role">Full-Stack Developer</div>
+                <div class="contact-school">Sanjivani College of Engineering</div>
+                <div style="margin-top:12px;font-size:13px;color:var(--txt3);">B.Tech Computer Engineering · 2nd Year</div>
+            </div>
+        </div>
+    </div>
 </section>
 
-<!-- ━━━ CTA ━━━ -->
-<section class="cta-section">
-  <div class="section-inner">
-    <div class="cta-card">
-      <h2>Ready to take control<br/>of your inventory?</h2>
-      <p>Join businesses already managing smarter with INVENTRACK.</p>
-      <a href="/login" class="btn-white">
-        Get Started Now →
-      </a>
+<!-- CTA BANNER -->
+<section>
+    <div class="section-inner" style="padding-top:0">
+        <div class="cta-banner">
+            <h2>Ready to take control of your inventory?</h2>
+            <p>Login now and start tracking your stock with batch-level precision.</p>
+            <a href="{{ url_for('login_route') }}" class="btn-cta">
+                <i class="fas fa-right-to-bracket"></i> Login to Dashboard
+            </a>
+        </div>
     </div>
-  </div>
 </section>
 
-<!-- ━━━ FOOTER ━━━ -->
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <a href="/" class="footer-brand-logo">
-        <div class="footer-brand-logo-icon">IT</div>
-        <span class="footer-brand-logo-text">INVEN<em>TRACK</em></span>
-      </a>
-      <p>A precision inventory management system built for accuracy, speed, and simplicity. Track batches, monitor expiry, and sell with confidence.</p>
-    </div>
-    <div class="footer-col">
-      <h5>Product</h5>
-      <ul>
-        <li><a href="#features">Features</a></li>
-        <li><a href="#how">How It Works</a></li>
-        <li><a href="/login">Dashboard</a></li>
-      </ul>
-    </div>
-    <div class="footer-col">
-      <h5>Account</h5>
-      <ul>
-        <li><a href="/login">Sign In</a></li>
-        <li><a href="/contact">Register</a></li>
-      </ul>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>© 2026 INVENTRACK. All rights reserved. Developed by <a href="#">Mayur B Gund</a>.</p>
-    <p>Built with precision &amp; care.</p>
-  </div>
+<!-- FOOTER -->
+<footer class="footer">
+    <a href="#" class="footer-brand">
+        <div class="footer-logo"><i class="fas fa-boxes-stacked"></i></div>
+        <span class="footer-name">INVENTRCK</span>
+    </a>
+    <span class="footer-copy">Built by Mayur Gund · Sanjivani COE · 2026</span>
 </footer>
 
-<script>
-  const hamburgerBtn = document.getElementById('hamburgerBtn');
-  const mobileMenu   = document.getElementById('mobileMenu');
-  let menuOpen = false;
-
-  hamburgerBtn.addEventListener('click', () => {
-    menuOpen = !menuOpen;
-    mobileMenu.classList.toggle('open', menuOpen);
-    const spans = hamburgerBtn.querySelectorAll('span');
-    if (menuOpen) {
-      spans[0].style.cssText = 'transform: rotate(45deg) translateY(6px)';
-      spans[1].style.opacity = '0';
-      spans[2].style.cssText = 'transform: rotate(-45deg) translateY(-6px)';
-    } else {
-      spans.forEach(s => s.style.cssText = '');
-    }
-    document.body.style.overflow = menuOpen ? 'hidden' : '';
-  });
-
-  mobileMenu.querySelectorAll('a').forEach(a => {
-    a.addEventListener('click', () => {
-      menuOpen = false;
-      mobileMenu.classList.remove('open');
-      hamburgerBtn.querySelectorAll('span').forEach(s => s.style.cssText = '');
-      document.body.style.overflow = '';
-    });
-  });
-</script>
 </body>
 </html>

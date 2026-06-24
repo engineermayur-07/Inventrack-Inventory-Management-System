@@ -136,6 +136,6 @@ def clear_browser_cache(response):
     response.headers["Expires"] = "0"
     return response
 
-    
+
 if __name__ == '__main__':
     app.run(debug=True)
