@@ -1,14 +1,15 @@
 import heapq
 import datetime
 
-# FIXED: Changed from a flat list to a dictionary to separate users
-# Structure: { "user1@email.com": [heap_elements], "user2@email.com": [heap_elements] }
-user_heaps = {}
+ 
+user_heaps = {}   # Dictionary to store the heaps of then users with key = email
 
 def clear_heap(email):
     """Resets the in-memory cache for a specific user."""
     global user_heaps
     user_heaps[email] = []
+
+
 
 def push_batch(email, item_id, product_name, batch_no, quantity, expiry_date_str):
     """
@@ -21,10 +22,12 @@ def push_batch(email, item_id, product_name, batch_no, quantity, expiry_date_str
         
     expiry_date = datetime.datetime.strptime(expiry_date_str, '%Y-%m-%d').date()
     
-    # Elements are ordered chronologically by index 0 (expiry_date)
+    
     heap_element = (expiry_date, item_id, product_name, batch_no, quantity)
     
     heapq.heappush(user_heaps[email], heap_element)
+
+
 
 def get_nearest_expiry(email, product_name):
     """
@@ -37,7 +40,7 @@ def get_nearest_expiry(email, product_name):
         
     matching_batches = []
     
-    # ONLY loop through this specific user's inventory pool
+     
     for element in user_heaps[email]:
         if element[2].lower() == product_name.lower():
             matching_batches.append(element)
@@ -46,6 +49,8 @@ def get_nearest_expiry(email, product_name):
         return None
         
     return min(matching_batches, key=lambda x: x[0])
+
+
 
 def load_from_db(email):
     """

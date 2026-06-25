@@ -1,16 +1,20 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from dotenv import  load_dotenv
+import os
+
+load_dotenv()
 
 def send_registration_alert(name, user_email ):
     """
     Sends a completely free expiration alert email directly to the supervisor.
     """
-    # 1. Setup your sender credentials (using a standard Gmail account)
-    sender_email = "noreply.inventrack2026@gmail.com"
-    sender_password = "fwrfhdhxrfjfkbsq" # Generated via Google Account security
      
-    # 2. Build the structured message
+    sender_email = os.environ.get("SMTP_EMAIL")
+    sender_password = os.environ.get("SMTP_PASSWORD")  # Generated via Google Account security
+     
+     
     message = MIMEMultipart()
     message["From"] = sender_email
     message["To"] = user_email
@@ -27,16 +31,16 @@ def send_registration_alert(name, user_email ):
     message.attach(MIMEText(body, "plain"))
     
     try:
-        # 3. Establish a secure connection to Gmail's free SMTP server
+        #  Connection to Gmail's free SMTP server
         server = smtplib.SMTP("smtp.gmail.com", 587)
         server.starttls() # Encrypt the connection
         server.login(sender_email, sender_password)
         
-        # 4. Fire the alert
         server.sendmail(sender_email, user_email, message.as_string())
         server.quit()
         print(f"📬 Registration alert successfully routed to {user_email}")
         return True
+        
     except Exception as e:
         print(f"❌ Email notification engine failed: {e}")
         return False

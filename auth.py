@@ -4,7 +4,10 @@ from heap import *
 import random
 import smtplib
 from email.mime.text import MIMEText
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 def login(email=None, password=None):
     conn = sqlite3.connect('database.db')
@@ -23,8 +26,9 @@ def generate_otp():
 
 def send_otp_email(receiver_email, otp_code, name):
     """Sends the OTP code using your verified app password."""
-    sender_email = "noreply.inventrack2026@gmail.com"
-    sender_password = "fwrfhdhxrfjfkbsq" 
+    
+    sender_email = os.environ.get("SMTP_EMAIL")
+    sender_password = os.environ.get("SMTP_PASSWORD") 
     
     msg = MIMEText(f'''Hi {name},\n
     Your OTP for registration is: {otp_code}\n\nThis code will expire shortly.\n\n

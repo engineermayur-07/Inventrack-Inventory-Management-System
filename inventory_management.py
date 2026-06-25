@@ -2,11 +2,14 @@ import sqlite3
 import datetime
 from heap import *
 from auth import *
-
+from datetime import datetime
 
 
 def add_batch(email=None, product_name=None, batch_no=None, quantity=None, expiry_date=None):
-    
+    """
+    Adds the product batch to the database. Ensures unique batch Id.
+    """
+
     conn = sqlite3.connect('database.db')
     try:
         product_name = product_name.upper().strip()
@@ -32,7 +35,15 @@ def add_batch(email=None, product_name=None, batch_no=None, quantity=None, expir
         conn.close()
         return False
 
+
+
 def sell_product(email=None, product_name=None, quantity=None):
+    """
+    Gets the early expiring batch. Deletes the batch if quantity is more than
+    the quantity in the batch and then updates the quantity of next expiring batch
+    by subtract from quantity. Else update the quantity of expiring batch.
+    re 
+    """
     try:
         product_name = product_name.upper().strip()
         conn = sqlite3.connect('database.db')
@@ -43,6 +54,11 @@ def sell_product(email=None, product_name=None, quantity=None):
             batch = get_nearest_expiry( email, product_name)
             if not batch:
                 conn.close()
+                return False
+
+            today = datetime.date.today()
+            today = today.strftime("%Y-/%m-/%d")
+            if batch[5] < today :
                 return False
 
             if batch[4] <= remaining:
@@ -69,6 +85,8 @@ def sell_product(email=None, product_name=None, quantity=None):
         conn.close()
         return False
 
+
+
 def get_all_inventory(email=None):
     """Returns all inventory rows for the user, ordered by expiry date ascending."""
      
@@ -86,6 +104,8 @@ def get_all_inventory(email=None):
         conn.close()
         print(f"Error in get_all_inventory: {e}")
         return []
+
+
 
 def get_expiring_stocks(email=None):
     """Returns inventory items expiring within 30 days."""

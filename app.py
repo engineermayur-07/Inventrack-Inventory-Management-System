@@ -6,10 +6,14 @@ from heap import *
 import sqlite3  
 from inventory_management import *
 from sms import *
+from dotenv import load_dotenv
+import os
 
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = 'inventory_mayur_developer_2026'
+app.secret_key = os.environ.get('SECRET_KEY', 'default-fallback-key')
+ 
 
 init_db()
 
@@ -55,6 +59,7 @@ def home():
     return render_template('landing_page.html')
 
 
+
 @app.route('/register', methods=['GET', 'POST'])
 def register():
     if request.method == 'POST':
@@ -63,30 +68,44 @@ def register():
         name = request.form.get('name')
         mobile = request.form.get('mobile')
         
-         
-        otp = generate_otp()
-        
-         
-        session['temp_user'] = {
-            'email': email,
-            'password': password,
-            'name': name,
-            'otp': otp,
-            'mobile' : mobile
-        }
-        
-        if send_otp_email(email, otp, name):
-            flash("An OTP has been sent to your email. Please verify. Check your spam folder. Our emails are usually in spam folder.", "info")
-            return redirect(url_for('verify_otp_page'))
+        print("In register function")
 
-        else:
-            flash("Error sending OTP email. Please try again.", "danger")
+        conn = sqlite3.connect("database.db")
+        cursor = conn.cursor()
+        cursor.execute("SELECT * FROM user WHERE email = ?",(email,))
+        is_already_registered = cursor.fetchall()
+        if( is_already_registered ) :
+            flash("Email already registered.\n Go to log in.",'danger')
+            conn.commit()
+            conn.close()
+
+        else : 
+            otp = generate_otp()
+            
+            
+            session['temp_user'] = {
+                'email': email,
+                'password': password,
+                'name': name,
+                'otp': otp,
+                'mobile' : mobile
+            }
+            
+            if send_otp_email(email, otp, name):
+                flash("An OTP has been sent to your email. Please verify. Check your spam folder. Our emails are usually in spam folder.", "info")
+                return redirect(url_for('verify_otp_page'))
+
+            else:
+                flash("Error sending OTP email. Please try again.", "danger")
             
     return render_template('register.html')
 
+
+
 @app.route('/verify-otp', methods=['GET', 'POST'])
 def verify_otp_page():
-     
+    
+    print("in verify otp function")
     if 'temp_user' not in session:
         return redirect(url_for('register'))
         
@@ -100,24 +119,27 @@ def verify_otp_page():
             try:
                 conn = sqlite3.connect('database.db')
                 cursor = conn.cursor()
+                
                 cursor.execute(
                     "INSERT INTO user (email, password, name, mobile) VALUES (?, ?, ?, ?)", 
                     (temp_data['email'], temp_data['password'], temp_data['name'], temp_data['mobile'])
                 )
                 conn.commit()
                 conn.close()
-                
+            
+
+                is_registered = send_registration_alert(temp_data['name'], temp_data['email'])
                  
-                session.pop('temp_user', None)
-                is_registered = send_registration_alert(temp_data['name'], temp['email'])
+
                 flash("Registration successful! You can now log in.", "success")
+                session.pop('temp_user', None)
 
                 return redirect(url_for('login_route'))
             except Exception as e:
-                flash("Database error occurred during registration.", "danger")
+                flash("Database error occurred, contact developer", "danger")
                 print(e)
         else:
-            # 🔴 OTP failed
+             
             flash("Invalid OTP code. Please look closely and try again.", "danger")
             
     return render_template('verify_otp.html')
@@ -137,6 +159,8 @@ def login_route():
         return redirect(url_for('home'))
     else:
         return render_template('login.html', error="Invalid email or password. Please try again.")
+
+
 
 @app.route('/add_batch', methods=['GET', 'POST'])
 def add_batchs():
