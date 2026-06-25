@@ -34,20 +34,23 @@ def get_nearest_expiry(email, product_name):
     Searches the logged-in user's private heap to find their absolute oldest 
     batch matching the requested product name.
     """
+
+    print("In get_nearest_expiry in heap 1 ")
     global user_heaps
     if email not in user_heaps or not user_heaps[email]:
         return None
-        
+    print("In get_nearest_expiry in heap 2 ")
     matching_batches = []
     
      
     for element in user_heaps[email]:
         if element[2].lower() == product_name.lower():
             matching_batches.append(element)
-            
+
+    print("In get_nearest_expiry in heap 3 ")       
     if not matching_batches:
         return None
-        
+    print("In get_nearest_expiry in heap 4 ") 
     return min(matching_batches, key=lambda x: x[0])
 
 

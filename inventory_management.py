@@ -9,7 +9,7 @@ def add_batch(email=None, product_name=None, batch_no=None, quantity=None, expir
     """
     Adds the product batch to the database. Ensures unique batch Id.
     """
-
+    print("i am above try in add_batch in inventory management")
     conn = sqlite3.connect('database.db')
     try:
         product_name = product_name.upper().strip()
@@ -17,12 +17,15 @@ def add_batch(email=None, product_name=None, batch_no=None, quantity=None, expir
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         
-        cursor.execute(" SELECT * FROM inventory WHERE batch_no = ?  ", (batch_no))
+        
+        cursor.execute(" SELECT * FROM inventory WHERE batch_no = ?  ", (batch_no,))
         is_batchno_available = cursor.fetchone()
+        print("i am in try in add_batch in inventory management")
 
         if(is_batchno_available) :
             return False
 
+        print("I am in add_batch in inventory_management")
         cursor.execute(
             "INSERT INTO inventory(user_email, product_name, batch_no, quantity, expiry_date) VALUES(?,?,?,?,?)",
             (email, product_name, batch_no, quantity, expiry_date)
@@ -44,23 +47,34 @@ def sell_product(email=None, product_name=None, quantity=None):
     by subtract from quantity. Else update the quantity of expiring batch.
     re 
     """
+    load_from_db(email)
     try:
         product_name = product_name.upper().strip()
         conn = sqlite3.connect('database.db')
         cursor = conn.cursor()
         remaining = quantity
 
+        
         while remaining > 0:
+            
             batch = get_nearest_expiry( email, product_name)
+             
             if not batch:
                 conn.close()
                 return False
+            
 
             today = datetime.date.today()
-            today = today.strftime("%Y-/%m-/%d")
-            if batch[5] < today :
-                return False
+            if batch[0] < today :
+                cursor.execute(
+                    "DELETE FROM inventory WHERE user_email=? AND batch_no=? AND product_name=?",
+                    (email, batch[3], product_name)
+                )
+                cursor.commit()
+                load_from_db(email)
+                continue
 
+    
             if batch[4] <= remaining:
                 remaining = remaining - batch[4]
                 cursor.execute(
@@ -79,6 +93,7 @@ def sell_product(email=None, product_name=None, quantity=None):
 
         conn.commit()
         conn.close()
+        load_from_db(email)
         return True
     except Exception:
         conn.commit()
@@ -129,3 +144,10 @@ def get_expiring_stocks(email=None):
         conn.close()
         print(f"Error in get_expiring_stocks: {e}")
         return []
+
+
+# '''
+# Comeback and write this function
+# '''
+# def delete_expired_stock( email = None):
+#     today = datetime.date.today()

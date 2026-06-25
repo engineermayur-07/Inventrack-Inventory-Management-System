@@ -176,6 +176,7 @@ def add_batchs():
     quantity     = int(request.form.get('quantity'))
     expiry_date  = request.form.get('expiry_date')
 
+    print("in add_batch in app.py")
     if add_batch(email, product_name, batch_no, quantity, expiry_date):
         return redirect(url_for('home'))
     return render_template('error_add.html', error = "Error adding batch. Ensure you enter unique batch id/no. Please go back and try again.")
