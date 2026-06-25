@@ -2,7 +2,7 @@ import sqlite3
 import datetime
 from heap import *
 from auth import *
-from datetime import datetime
+import datetime
 
 
 def add_batch(email=None, product_name=None, batch_no=None, quantity=None, expiry_date=None):
@@ -109,7 +109,8 @@ def get_all_inventory(email=None):
 
 def get_expiring_stocks(email=None):
     """Returns inventory items expiring within 30 days."""
-     
+    
+    conn = None
     try:
         today          = datetime.date.today()
         thirty_days    = today + datetime.timedelta(days=30)
