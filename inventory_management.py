@@ -152,8 +152,4 @@ def get_expiring_stocks(email=None):
         return []
 
 
-# '''
-# Comeback and write this function
-# '''
-# def delete_expired_stock( email = None):
-#     today = datetime.date.today()
+ 
