@@ -372,8 +372,8 @@
             <thead>
                 <tr>
                     <th>#</th>
-                    <th>Product</th>
                     <th>Batch No.</th>
+                    <th>Product</th>
                     <th>Quantity</th>
                     <th>Expiry Date</th>
                     <th>Status</th>
@@ -406,8 +406,8 @@
 
                 <tr class="{{ row_cls }} inv-row" data-search="{{ item[2] | lower }} {{ item[3] | lower }}">
                     <td style="color:var(--txt3);font-size:12px">{{ loop.index }}</td>
-                    <td><span class="cell-product">{{ item[2] }}</span></td>
-                    <td><span class="cell-batch">{{ item[3] }}</span></td>
+                    <td><span class="cell-product">{{ item[3] }}</span></td>
+                    <td><span class="cell-batch">{{ item[2] }}</span></td>
                     <td><span class="cell-qty">{{ item[4] }}</span></td>
                     <td><span class="cell-date">{{ item[5] }}</span></td>
                     <td>

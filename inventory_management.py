@@ -58,23 +58,29 @@ def sell_product(email=None, product_name=None, quantity=None):
         while remaining > 0:
             
             batch = get_nearest_expiry( email, product_name)
-             
+            
+            print(batch)
+
             if not batch:
                 conn.close()
                 return False
             
+             
 
             today = datetime.date.today()
             if batch[0] < today :
+                 
                 cursor.execute(
                     "DELETE FROM inventory WHERE user_email=? AND batch_no=? AND product_name=?",
                     (email, batch[3], product_name)
                 )
-                cursor.commit()
+                conn.commit()
+                 
                 load_from_db(email)
                 continue
 
-    
+             
+
             if batch[4] <= remaining:
                 remaining = remaining - batch[4]
                 cursor.execute(
